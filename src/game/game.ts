@@ -1,7 +1,7 @@
-import { CanvasManager } from "./classes/canvas-manager.ts";
-import { Level_1 } from "./scenes/levels/level_1.ts";
-import { Player } from "./scenes/player.ts";
-import { Input } from "./classes/input.ts";
+import {CanvasManager} from "./classes/canvas-manager.ts";
+import {Level_1} from "./scenes/levels/level_1.ts";
+import {Player} from "./scenes/player.ts";
+import {Input} from "./classes/input.ts";
 
 export class Game {
     private canvasManager: CanvasManager;
@@ -10,7 +10,13 @@ export class Game {
     private input = new Input();
 
     constructor() {
-        this.canvasManager = CanvasManager.getInstance()
+        this.canvasManager = CanvasManager.getInstance();
+
+        this.input.addOnKeyUpCallback((key) => {
+            if (['w', 'a', 's', 'd'].includes(key)) {
+                this.player.stopMove();
+            }
+        });
     }
 
     start() {

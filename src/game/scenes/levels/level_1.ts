@@ -1,7 +1,7 @@
-import { Player } from "../player.ts";
-import { Level, LevelMap, LevelObjective } from "../../types/level.ts";
-import { Input } from "../../classes/input.ts";
-import { Floor } from "../floor.ts";
+import {Player} from "../player.ts";
+import {Level, LevelMap, LevelObjective} from "../../types/level.ts";
+import {Input} from "../../classes/input.ts";
+import {Floor} from "../floor.ts";
 
 export class Level_1 implements Level {
     player: Player;
@@ -26,7 +26,6 @@ export class Level_1 implements Level {
     }
 
     draw(): void {
-        console.log(this.map)
         this.map.forEach(row => row.forEach(tile => {
             tile.nodes.forEach(node => node.draw());
         }));

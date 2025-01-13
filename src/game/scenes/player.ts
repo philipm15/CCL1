@@ -1,17 +1,62 @@
-import { CanvasItemNode } from "../nodes/canvas-item.node.ts";
-import { LevelMap } from "../types/level.ts";
+import {CanvasItemNode} from "../nodes/canvas-item.node.ts";
+import {LevelMap} from "../types/level.ts";
+import {AnimatedSpriteNode} from "../nodes/animated-sprite.node.ts";
 
 export class Player extends CanvasItemNode {
-    private tilesPerSecond = 8;
+    private tilesPerSecond = 4;
     private lastMoveTime = 0;
+    private animatedSpriteNode = new AnimatedSpriteNode({
+        spriteSheetPath: 'src/assets/spritesheets/player.png',
+        rows: 13,
+        cols: 4,
+        defaultAnimation: 'idle_down',
+        animations: {
+            'idle_down': {
+                row: 0,
+                numberOfSprites: 4,
+            },
+            'idle_right': {
+                row: 1,
+                numberOfSprites: 4,
+            },
+            'idle_left': {
+                row: 2,
+                numberOfSprites: 4,
+            },
+            'idle_up': {
+                row: 3,
+                numberOfSprites: 4,
+            },
+            'walk_down': {
+                row: 5,
+                numberOfSprites: 4,
+            },
+            'walk_left': {
+                row: 7,
+                numberOfSprites: 4,
+            },
+            'walk_right': {
+                row: 9,
+                numberOfSprites: 4,
+            },
+            'walk_up': {
+                row: 11,
+                numberOfSprites: 4,
+            }
+        }
+    })
 
     constructor(x: number, y: number, tileX: number, tileY: number) {
         super(x, y, tileX, tileY);
+        console.log(this.animatedSpriteNode)
     }
 
     draw() {
-        this.ctx.fillStyle = 'red';
-        this.ctx.fillRect(this.x, this.y, this.tileSize, this.tileSize);
+        if (!this.animatedSpriteNode.currentAnimation) return;
+        const frames = this.animatedSpriteNode.currentAnimation.frames;
+        const frame = frames[Math.floor(Date.now() / 125) % frames.length];
+
+        this.ctx.drawImage(frame, this.x, this.y);
     }
 
     update() {
@@ -28,10 +73,24 @@ export class Player extends CanvasItemNode {
         let newTileX = this.tileX;
         let newTileY = this.tileY;
 
-        if (direction === 'up') newTileY--;
-        if (direction === 'down') newTileY++;
-        if (direction === 'left') newTileX--;
-        if (direction === 'right') newTileX++;
+        if (direction === 'up') {
+            newTileY--
+            this.direction = 'up';
+        }
+        if (direction === 'down') {
+            newTileY++
+            this.direction = 'down';
+        }
+        if (direction === 'left') {
+            newTileX--
+            this.direction = 'left';
+        }
+        if (direction === 'right') {
+            newTileX++
+            this.direction = 'right';
+        }
+
+        this.animatedSpriteNode.playAnimation(`walk_${this.direction}`);
 
         // Check boundaries and collisions
         if (
@@ -49,5 +108,11 @@ export class Player extends CanvasItemNode {
             // Update the last move timestamp
             this.lastMoveTime = currentTime;
         }
+    }
+
+
+    stopMove() {
+        this.animatedSpriteNode.playAnimation(`idle_${this.direction}`);
+        this.isMoving = false;
     }
 }

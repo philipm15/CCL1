@@ -8,6 +8,7 @@ export class CanvasItemNode {
     x: number;
     y: number;
     ctx = CanvasManager.getInstance().ctx;
+    direction: 'up' | 'down' | 'left' | 'right' = 'down';
 
     constructor(x: number, y: number, tileX: number, tileY: number) {
         this.x = x;
