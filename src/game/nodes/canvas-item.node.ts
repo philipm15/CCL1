@@ -1,14 +1,19 @@
+import { CanvasManager } from "../classes/canvas-manager.ts";
+import { TILE_SIZE } from "../lib/constants.ts";
+
 export class CanvasItemNode {
+    tileSize = TILE_SIZE;
+    tileX: number;
+    tileY: number;
     x: number;
     y: number;
-    width: number;
-    height: number;
+    ctx = CanvasManager.getInstance().ctx;
 
-    constructor(x: number, y: number, width: number, height: number) {
+    constructor(x: number, y: number, tileX: number, tileY: number) {
         this.x = x;
         this.y = y;
-        this.width = width;
-        this.height = height;
+        this.tileX = tileX;
+        this.tileY = tileY;
     }
 
     /**
