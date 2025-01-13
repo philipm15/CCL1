@@ -113,6 +113,5 @@ export class Player extends CanvasItemNode {
 
     stopMove() {
         this.animatedSpriteNode.playAnimation(`idle_${this.direction}`);
-        this.isMoving = false;
     }
 }
