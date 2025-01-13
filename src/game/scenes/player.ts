@@ -2,7 +2,7 @@ import { CanvasItemNode } from "../nodes/canvas-item.node.ts";
 import { LevelMap } from "../types/level.ts";
 
 export class Player extends CanvasItemNode {
-    private tilesPerSecond = 6;
+    private tilesPerSecond = 8;
     private lastMoveTime = 0;
 
     constructor(x: number, y: number, tileX: number, tileY: number) {
