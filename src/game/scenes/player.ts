@@ -66,7 +66,7 @@ export class Player extends CanvasItemNode {
         this.ctx.drawImage(frame, this.x, this.y);
     }
 
-    update() {
+    update(deltaTime: number) {
         if (this.moving) {
             const elapsed = (Date.now() - this.moveStartTime) / 1000; // Time in seconds
             const moveDuration = 1 / this.tilesPerSecond; // Duration to move one tile
@@ -130,7 +130,6 @@ export class Player extends CanvasItemNode {
     }
 
     stopMove() {
-        this.moving = false;
         this.animatedSpriteNode.playAnimation(`idle_${this.direction}`);
     }
 
