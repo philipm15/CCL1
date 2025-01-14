@@ -66,7 +66,7 @@ export class Player extends CanvasItemNode {
         this.ctx.drawImage(frame, this.x, this.y);
     }
 
-    update(deltaTime: number) {
+    update() {
         if (this.moving) {
             const elapsed = (Date.now() - this.moveStartTime) / 1000; // Time in seconds
             const moveDuration = 1 / this.tilesPerSecond; // Duration to move one tile

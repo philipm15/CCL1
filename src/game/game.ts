@@ -1,7 +1,7 @@
-import {CanvasManager} from "./classes/canvas-manager.ts";
-import {Level_1} from "./scenes/levels/level_1.ts";
-import {Player} from "./scenes/player.ts";
-import {Input} from "./classes/input.ts";
+import { CanvasManager } from "./classes/canvas-manager.ts";
+import { Level_1 } from "./scenes/levels/level_1.ts";
+import { Player } from "./scenes/player.ts";
+import { Input } from "./classes/input.ts";
 
 export enum GameLevel {
     Level_1 = 1,
@@ -26,11 +26,11 @@ export class Game {
     }
 
     setLevel(level: GameLevel) {
-        if(this.animationFrameId !== undefined) {
+        if (this.animationFrameId !== undefined) {
             window.cancelAnimationFrame(this.animationFrameId);
         }
 
-        if(level === GameLevel.Level_1) {
+        if (level === GameLevel.Level_1) {
             this.currentLevel = new Level_1(this.player);
         }
 
@@ -38,22 +38,21 @@ export class Game {
     }
 
     private gameLoop() {
-        const currentTime = Date.now();
         const ctx = this.canvasManager.ctx;
         ctx.clearRect(0, 0, this.canvasManager.canvas.width, this.canvasManager.canvas.height);
 
-        this.handleInput(currentTime);
+        this.handleInput();
         this.currentLevel.draw();
 
         this.drawCurrentObjectives();
         this.animationFrameId = requestAnimationFrame(this.gameLoop.bind(this));
     }
 
-    private handleInput(currentTime: number) {
-        if (this.input.isKeyPressed('w')) this.player.move('up', this.currentLevel.map, currentTime);
-        if (this.input.isKeyPressed('s')) this.player.move('down', this.currentLevel.map, currentTime);
-        if (this.input.isKeyPressed('a')) this.player.move('left', this.currentLevel.map, currentTime);
-        if (this.input.isKeyPressed('d')) this.player.move('right', this.currentLevel.map, currentTime);
+    private handleInput() {
+        if (this.input.isKeyPressed('w')) this.player.move('up', this.currentLevel.map);
+        if (this.input.isKeyPressed('s')) this.player.move('down', this.currentLevel.map);
+        if (this.input.isKeyPressed('a')) this.player.move('left', this.currentLevel.map);
+        if (this.input.isKeyPressed('d')) this.player.move('right', this.currentLevel.map);
     }
 
     private drawCurrentObjectives() {
@@ -63,14 +62,14 @@ export class Game {
         objectives.forEach((objective) => {
             const image = objective.node.staticSpriteNode.sprite;
 
-            if(image) {
+            if (image) {
                 const div = document.createElement("div");
                 div.classList.add("game-objective-entry");
 
                 const span = div.appendChild(document.createElement("span"));
                 span.innerHTML = objective.item.name;
 
-                if(objective.acquired) {
+                if (objective.acquired) {
                     span.classList.add("line-through");
                 }
 
