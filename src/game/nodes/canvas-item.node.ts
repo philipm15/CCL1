@@ -3,9 +3,13 @@ import { TILE_SIZE } from "../lib/constants.ts";
 
 export class CanvasItemNode {
     tileSize = TILE_SIZE;
+    // Matrix coordinate of X
     tileX: number;
+    // Matrix coordinate of Y
     tileY: number;
+    // Canvas coordinate of X
     x: number;
+    // Canvas coordinate of Y
     y: number;
     ctx = CanvasManager.getInstance().ctx;
     direction: 'up' | 'down' | 'left' | 'right' = 'down';

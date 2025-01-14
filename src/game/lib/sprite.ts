@@ -42,3 +42,14 @@ export function extractFramesFromSpritesheet(
 
     return frames;
 }
+
+export function loadSpriteByPath(filePath: string): Promise<HTMLImageElement> {
+    const image = new Image();
+    image.src = filePath;
+    return new Promise((resolve, reject) => {
+        image.onload = () => {
+            resolve(image)
+        };
+        image.onerror = reject;
+    });
+}

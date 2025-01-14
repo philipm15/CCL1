@@ -1,6 +1,7 @@
-import {CanvasItemNode} from "../nodes/canvas-item.node.ts";
-import {LevelMap} from "../types/level.ts";
-import {AnimatedSpriteNode} from "../nodes/animated-sprite.node.ts";
+import { CanvasItemNode } from "../nodes/canvas-item.node.ts";
+import { LevelMap } from "../types/level.ts";
+import { AnimatedSpriteNode } from "../nodes/animated-sprite.node.ts";
+import { CollisionMask } from "../lib/constants.ts";
 
 export class Player extends CanvasItemNode {
     private tilesPerSecond = 4;
@@ -48,11 +49,12 @@ export class Player extends CanvasItemNode {
 
     constructor(x: number, y: number, tileX: number, tileY: number) {
         super(x, y, tileX, tileY);
-        console.log(this.animatedSpriteNode)
     }
 
     draw() {
         if (!this.animatedSpriteNode.currentAnimation) return;
+
+        // Get the current animation object from the AnimatedSpriteNode instance
         const frames = this.animatedSpriteNode.currentAnimation.frames;
         const frame = frames[Math.floor(Date.now() / 125) % frames.length];
 
@@ -90,7 +92,7 @@ export class Player extends CanvasItemNode {
             this.direction = 'right';
         }
 
-        this.animatedSpriteNode.playAnimation(`walk_${this.direction}`);
+        this.animatedSpriteNode.playAnimation(`walk_${ this.direction }`);
 
         // Check boundaries and collisions
         if (
@@ -98,7 +100,7 @@ export class Player extends CanvasItemNode {
             newTileX < map[0].length &&
             newTileY >= 0 &&
             newTileY < map.length &&
-            map[newTileY][newTileX].collisionMask === 0
+            map[newTileX][newTileY].collisionMask === CollisionMask.FLOOR
         ) {
             this.tileX = newTileX;
             this.tileY = newTileY;
@@ -112,6 +114,6 @@ export class Player extends CanvasItemNode {
 
 
     stopMove() {
-        this.animatedSpriteNode.playAnimation(`idle_${this.direction}`);
+        this.animatedSpriteNode.playAnimation(`idle_${ this.direction }`);
     }
 }

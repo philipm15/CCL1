@@ -19,4 +19,12 @@ export class Input {
     addOnKeyUpCallback(callback: (key: string) => void) {
         this.onKeyUpCallbacks.push(callback);
     }
+
+    static onKeyPress(key: string, callback: (key: string) => void) {
+        return window.addEventListener('keydown', (e) => {
+            if(e.key === key) {
+                callback(e.key)
+            }
+        });
+    }
 }

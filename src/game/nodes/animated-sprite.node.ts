@@ -1,4 +1,4 @@
-import {extractFramesFromSpritesheet} from "../lib/spritesheet.ts";
+import {extractFramesFromSpritesheet} from "../lib/sprite.ts";
 
 export type AnimatedSpriteConfig = {
     spriteSheetPath: string;
