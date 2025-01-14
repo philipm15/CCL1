@@ -1,10 +1,10 @@
-import { CanvasItemNode } from "../nodes/canvas-item.node.ts";
-import { LevelMap } from "../types/level.ts";
-import { AnimatedSpriteNode } from "../nodes/animated-sprite.node.ts";
-import { CollisionMask, TILE_SIZE } from "../lib/constants.ts";
+import { CanvasItemNode } from "../../nodes/canvas-item.node.ts";
+import { LevelMap } from "../../types/level.ts";
+import { AnimatedSpriteNode } from "../../nodes/animated-sprite.node.ts";
+import { CollisionMask, TILE_SIZE } from "../../lib/constants.ts";
 
 export class Player extends CanvasItemNode {
-    private tilesPerSecond = 4;
+    private tilesPerSecond = 6;
     private animatedSpriteNode = new AnimatedSpriteNode({
         spriteSheetPath: 'src/assets/spritesheets/player.png',
         rows: 13,

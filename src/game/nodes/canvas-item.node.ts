@@ -34,6 +34,6 @@ export class CanvasItemNode {
      * @abstract
      * @param deltaTime {number}
      */
-    update(deltaTime: number) {
+    update(deltaTime?: number) {
     }
 }

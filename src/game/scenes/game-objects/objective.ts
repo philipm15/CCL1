@@ -1,6 +1,6 @@
-import { CanvasItemNode } from "../nodes/canvas-item.node.ts";
-import { StaticSpriteNode } from "../nodes/static-sprite.node.ts";
-import { TILE_SIZE } from "../lib/constants.ts";
+import { CanvasItemNode } from "../../nodes/canvas-item.node.ts";
+import { StaticSpriteNode } from "../../nodes/static-sprite.node.ts";
+import { TILE_SIZE } from "../../lib/constants.ts";
 
 export class Objective extends CanvasItemNode {
     staticSpriteNode = new StaticSpriteNode();

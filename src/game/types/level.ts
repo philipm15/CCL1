@@ -1,7 +1,7 @@
-import { Player } from "../scenes/player.ts";
+import { Player } from "../scenes/game-objects/player.ts";
 import { CanvasItemNode } from "../nodes/canvas-item.node.ts";
 import { Input } from "../classes/input.ts";
-import { Objective } from "../scenes/objective.ts";
+import { Objective } from "../scenes/game-objects/objective.ts";
 import { Item } from "./item.ts";
 
 export type LevelObjective = {
@@ -27,6 +27,5 @@ export interface Level {
     onCompleteCallback?: () => void;
 
     draw(): void;
-    restart(): void;
     onComplete(): void;
 }

@@ -1,4 +1,4 @@
-import { CanvasItemNode } from "../nodes/canvas-item.node.ts";
+import { CanvasItemNode } from "../../nodes/canvas-item.node.ts";
 
 export class Floor extends CanvasItemNode {
     draw() {

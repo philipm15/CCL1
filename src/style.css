@@ -13,6 +13,11 @@
   -moz-osx-font-smoothing: grayscale;
 }
 
+#app {
+  display: grid;
+  place-items: center;
+}
+
 #gameObjectives {
   width: 624px;
   height: 120px;

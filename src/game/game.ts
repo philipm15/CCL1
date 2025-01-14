@@ -1,7 +1,9 @@
 import { CanvasManager } from "./classes/canvas-manager.ts";
 import { Level_1 } from "./scenes/levels/level_1.ts";
-import { Player } from "./scenes/player.ts";
+import { Player } from "./scenes/game-objects/player.ts";
 import { Input } from "./classes/input.ts";
+import {Level} from "./types/level.ts";
+import {Level_2} from "./scenes/levels/level_2.ts";
 
 export enum GameLevel {
     Level_1 = 1,
@@ -11,7 +13,7 @@ export enum GameLevel {
 export class Game {
     private canvasManager: CanvasManager;
     private player = new Player(0, 0);
-    private currentLevel = new Level_1(this.player);
+    private currentLevel: Level | undefined = undefined;
     private input = new Input();
     animationFrameId: number | undefined;
 
@@ -32,13 +34,21 @@ export class Game {
             this.currentLevel = new Level_1(this.player);
         }
 
-        this.gameLoop();
-        this.currentLevel.onCompleteCallback = () => {
-            console.log("complete")
+        if (level === GameLevel.Level_2) {
+            this.currentLevel = new Level_2(this.player);
+        }
+
+        if(this.currentLevel) {
+            this.gameLoop();
+            this.currentLevel.onCompleteCallback = () => {
+                console.log("complete")
+            }
         }
     }
 
     private gameLoop() {
+        if(!this.currentLevel) return;
+
         const ctx = this.canvasManager.ctx;
         ctx.clearRect(0, 0, this.canvasManager.canvas.width, this.canvasManager.canvas.height);
 
