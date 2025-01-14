@@ -61,7 +61,7 @@ export class Player extends CanvasItemNode {
         if (!this.animatedSpriteNode.currentAnimation) return;
 
         const frames = this.animatedSpriteNode.currentAnimation.frames;
-        const frame = frames[Math.floor(Date.now() / 125) % frames.length];
+        const frame = frames[Math.floor(Date.now() / 150) % frames.length];
 
         this.ctx.drawImage(frame, this.x, this.y);
     }

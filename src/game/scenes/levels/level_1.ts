@@ -71,11 +71,14 @@ export class Level_1 implements Level {
         if (availableObjective) {
             availableObjective.acquired = true;
             this.setCollisionMask(availableObjective.node.tileX, availableObjective.node.tileY, CollisionMask.FLOOR)
+            this.checkCompleteState();
         }
     }
 
     private checkIfPlayerCanPickupItem() {
         const availableObjective = this.getAvailableObjective();
+
+        // TODO: add indicator to signal that the item can be picked up
     }
 
     private getAvailableObjective() {
@@ -105,5 +108,13 @@ export class Level_1 implements Level {
 
     private setCollisionMask(tileX: number, tileY: number, collisionMask: CollisionMask) {
         this.map[tileX][tileY].collisionMask = collisionMask;
+    }
+
+    private checkCompleteState() {
+        const objectives = this.objectives;
+
+        if(objectives.every(objective => objective.acquired)) {
+            this.onComplete();
+        }
     }
 }

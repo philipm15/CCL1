@@ -26,15 +26,16 @@ export class Game {
     }
 
     setLevel(level: GameLevel) {
-        if (this.animationFrameId !== undefined) {
-            window.cancelAnimationFrame(this.animationFrameId);
-        }
+        this.cancelCurrentLevel();
 
         if (level === GameLevel.Level_1) {
             this.currentLevel = new Level_1(this.player);
         }
 
         this.gameLoop();
+        this.currentLevel.onCompleteCallback = () => {
+            console.log("complete")
+        }
     }
 
     private gameLoop() {
@@ -78,5 +79,11 @@ export class Game {
                 gameObjectivesDiv.appendChild(div);
             }
         })
+    }
+
+    private cancelCurrentLevel() {
+        if (this.animationFrameId !== undefined) {
+            window.cancelAnimationFrame(this.animationFrameId);
+        }
     }
 }
