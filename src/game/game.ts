@@ -3,11 +3,17 @@ import {Level_1} from "./scenes/levels/level_1.ts";
 import {Player} from "./scenes/player.ts";
 import {Input} from "./classes/input.ts";
 
+export enum GameLevel {
+    Level_1 = 1,
+    Level_2 = 2,
+}
+
 export class Game {
     private canvasManager: CanvasManager;
-    private player = new Player(0, 0, 0, 0);
+    private player = new Player(0, 0);
     private currentLevel = new Level_1(this.player);
     private input = new Input();
+    animationFrameId: number | undefined;
 
     constructor() {
         this.canvasManager = CanvasManager.getInstance();
@@ -19,7 +25,15 @@ export class Game {
         });
     }
 
-    start() {
+    setLevel(level: GameLevel) {
+        if(this.animationFrameId !== undefined) {
+            window.cancelAnimationFrame(this.animationFrameId);
+        }
+
+        if(level === GameLevel.Level_1) {
+            this.currentLevel = new Level_1(this.player);
+        }
+
         this.gameLoop();
     }
 
@@ -31,7 +45,8 @@ export class Game {
         this.handleInput(currentTime);
         this.currentLevel.draw();
 
-        requestAnimationFrame(this.gameLoop.bind(this));
+        this.drawCurrentObjectives();
+        this.animationFrameId = requestAnimationFrame(this.gameLoop.bind(this));
     }
 
     private handleInput(currentTime: number) {
@@ -39,5 +54,30 @@ export class Game {
         if (this.input.isKeyPressed('s')) this.player.move('down', this.currentLevel.map, currentTime);
         if (this.input.isKeyPressed('a')) this.player.move('left', this.currentLevel.map, currentTime);
         if (this.input.isKeyPressed('d')) this.player.move('right', this.currentLevel.map, currentTime);
+    }
+
+    private drawCurrentObjectives() {
+        const objectives = this.currentLevel.objectives;
+        const gameObjectivesDiv = this.canvasManager.objectivesDiv;
+        gameObjectivesDiv.replaceChildren();
+        objectives.forEach((objective) => {
+            const image = objective.node.staticSpriteNode.sprite;
+
+            if(image) {
+                const div = document.createElement("div");
+                div.classList.add("game-objective-entry");
+
+                const span = div.appendChild(document.createElement("span"));
+                span.innerHTML = objective.item.name;
+
+                if(objective.acquired) {
+                    span.classList.add("line-through");
+                }
+
+                div.appendChild(image);
+
+                gameObjectivesDiv.appendChild(div);
+            }
+        })
     }
 }

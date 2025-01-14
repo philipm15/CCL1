@@ -1,11 +1,12 @@
-import { Item } from "./item.ts";
 import { Player } from "../scenes/player.ts";
 import { CanvasItemNode } from "../nodes/canvas-item.node.ts";
 import { Input } from "../classes/input.ts";
+import { Objective } from "../scenes/objective.ts";
+import { Item } from "./item.ts";
 
 export type LevelObjective = {
     item: Item;
-    node: CanvasItemNode;
+    node: Objective;
     required: boolean;
     acquired: boolean;
     itemsRequired?: Item[];

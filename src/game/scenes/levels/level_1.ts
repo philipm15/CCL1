@@ -2,7 +2,7 @@ import { Player } from "../player.ts";
 import { Level, LevelMap, LevelObjective } from "../../types/level.ts";
 import { Input } from "../../classes/input.ts";
 import { Floor } from "../floor.ts";
-import { Item } from "../item.ts";
+import { Objective } from "../objective.ts";
 import { CollisionMask } from "../../lib/constants.ts";
 
 export class Level_1 implements Level {
@@ -28,7 +28,7 @@ export class Level_1 implements Level {
                 price: 5,
                 weight: 2
             },
-            node: new Item(10, 5, 'src/assets/sprites/plant.png')
+            node: new Objective(10, 5, 'src/assets/sprites/plant.png')
         }
     ];
     input = new Input();
@@ -36,6 +36,7 @@ export class Level_1 implements Level {
 
     constructor(player: Player) {
         this.player = player;
+        player.setTilePosition(0,0);
 
         this.objectives.forEach(objective => {
             this.setCollisionMask(objective.node.tileX, objective.node.tileY, CollisionMask.ITEM);
@@ -59,9 +60,6 @@ export class Level_1 implements Level {
         this.player.draw();
 
         this.checkIfPlayerCanPickupItem();
-    }
-
-    restart() {
     }
 
     onComplete() {
