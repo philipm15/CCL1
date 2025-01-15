@@ -36,4 +36,8 @@ export class CanvasItemNode {
      */
     update(deltaTime?: number) {
     }
+
+    checkCollision(node: CanvasItemNode): boolean {
+        return this.tileX === node.tileX && this.tileY === node.tileY
+    }
 }

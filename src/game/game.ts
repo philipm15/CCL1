@@ -14,6 +14,7 @@ export enum GameLevel {
 export class Game {
     private canvasManager: CanvasManager;
     private player = new Player(0, 0);
+    private selectedLevel: GameLevel | undefined;
     private currentLevel: Level | undefined = undefined;
     private input = new Input();
     private camera = new Camera();
@@ -38,6 +39,7 @@ export class Game {
 
     setLevel(level: GameLevel) {
         this.cancelCurrentLevel();
+        this.selectedLevel = level;
 
         if (level === GameLevel.Level_1) {
             this.currentLevel = new Level_1(this.player);
@@ -51,6 +53,11 @@ export class Game {
             this.gameLoop();
             this.currentLevel.onCompleteCallback = () => {
                 console.log("complete")
+            }
+
+            this.currentLevel.onFailedCallback = () => {
+                console.log("failed")
+                this.setLevel(this.selectedLevel!);
             }
         }
     }

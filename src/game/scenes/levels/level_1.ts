@@ -4,6 +4,8 @@ import {Floor} from "../game-objects/floor.ts";
 import {Objective} from "../game-objects/objective.ts";
 import {LevelTemplate} from "./level_template.ts";
 import {Enemy} from "../game-objects/enemy.ts";
+import { CollisionMask, MAP_SIZE } from "../../lib/constants.ts";
+import { Wall } from "../game-objects/wall.ts";
 
 export class Level_1 extends LevelTemplate {
     map: LevelMap =
@@ -11,9 +13,16 @@ export class Level_1 extends LevelTemplate {
             .map((_, i) => {
                 return Array.from({length: 20})
                     .map((_, j) => {
+                        if(i === 0 || i === MAP_SIZE - 1 || j === 0 || j === MAP_SIZE - 1) {
+                            return {
+                                node: new Wall(j, i, j, i),
+                                collisionMask: CollisionMask.STATIC
+                            }
+                        }
+
                         return {
                             node: new Floor(j, i, j, i),
-                            collisionMask: 0
+                            collisionMask: CollisionMask.FLOOR
                         }
                     })
             })

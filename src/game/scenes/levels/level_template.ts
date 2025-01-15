@@ -1,7 +1,7 @@
 import { Player } from "../game-objects/player.ts";
 import { Input } from "../../classes/input.ts";
 import { LevelMap, LevelObjective } from "../../types/level.ts";
-import { CAMERA_TILES, CollisionMask } from "../../lib/constants.ts";
+import { CollisionMask } from "../../lib/constants.ts";
 import { Enemy } from "../game-objects/enemy.ts";
 import { Camera } from "../../classes/camera.ts";
 
@@ -13,10 +13,11 @@ export abstract class LevelTemplate {
 
     input = new Input();
     onCompleteCallback?: () => void;
+    onFailedCallback?: () => void;
 
     protected constructor(player: Player) {
         this.player = player;
-        player.setTilePosition(0,0);
+        player.setTilePosition(1, 1);
     }
 
     init() {
@@ -53,6 +54,7 @@ export abstract class LevelTemplate {
         this.player.draw();
 
         this.checkIfPlayerCanPickupItem();
+        this.checkFailedState();
     }
 
     onComplete() {
@@ -106,8 +108,14 @@ export abstract class LevelTemplate {
     checkCompleteState() {
         const objectives = this.objectives;
 
-        if(objectives.every(objective => objective.acquired)) {
+        if (objectives.every(objective => objective.acquired)) {
             this.onComplete();
         }
+    }
+
+    checkFailedState() {
+         if(this.enemies.some(enemy => enemy.checkCollision(this.player))) {
+             this.onFailedCallback && this.onFailedCallback();
+         }
     }
 }

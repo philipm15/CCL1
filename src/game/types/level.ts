@@ -26,6 +26,7 @@ export interface Level {
     map: LevelMap;
     input: Input;
     onCompleteCallback?: () => void;
+    onFailedCallback?: () => void;
 
     draw(camera: Camera): void;
     onComplete(): void;
