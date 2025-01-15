@@ -12,7 +12,7 @@ export class Level_1 extends LevelTemplate {
                 return Array.from({length: 20})
                     .map((_, j) => {
                         return {
-                            nodes: [new Floor(j, i, j, i)],
+                            node: new Floor(j, i, j, i),
                             collisionMask: 0
                         }
                     })

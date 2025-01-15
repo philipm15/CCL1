@@ -1,8 +1,9 @@
-import {Player} from "../game-objects/player.ts";
-import {Input} from "../../classes/input.ts";
-import {LevelMap, LevelObjective} from "../../types/level.ts";
-import {CollisionMask} from "../../lib/constants.ts";
-import {Enemy} from "../game-objects/enemy.ts";
+import { Player } from "../game-objects/player.ts";
+import { Input } from "../../classes/input.ts";
+import { LevelMap, LevelObjective } from "../../types/level.ts";
+import { CAMERA_TILES, CollisionMask } from "../../lib/constants.ts";
+import { Enemy } from "../game-objects/enemy.ts";
+import { Camera } from "../../classes/camera.ts";
 
 export abstract class LevelTemplate {
     player: Player;
@@ -26,10 +27,14 @@ export abstract class LevelTemplate {
         Input.onKeyPress('e', this.onPickup.bind(this));
     }
 
-    draw(): void {
-        (this.map ||[]).forEach(row => row.forEach(tile => {
-            tile.nodes.forEach(node => node.draw());
-        }));
+    draw(camera: Camera): void {
+        // const visibleTiles = camera.getVisibleTiles(this.map);
+        //
+        // visibleTiles.forEach(tile => {
+        //     tile.node.draw();
+        // })
+
+        this.map.flat().forEach(tile => tile.node.draw())
 
         this.objectives
             .filter(objective => !objective.acquired)

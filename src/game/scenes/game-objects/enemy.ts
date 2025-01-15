@@ -46,7 +46,7 @@ export class Enemy extends CanvasItemNode {
 
         const frames = this.animatedSpriteNode.currentAnimation.frames;
         const frame = frames[Math.floor(Date.now() / 150) % frames.length];
-        this.ctx.drawImage(frame, this.x, this.y);
+        this.ctx.drawImage(frame, this.x, this.y, this.tileSize, this.tileSize);
     }
 
     update() {

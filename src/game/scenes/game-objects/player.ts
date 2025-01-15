@@ -2,8 +2,9 @@ import { CanvasItemNode } from "../../nodes/canvas-item.node.ts";
 import { LevelMap } from "../../types/level.ts";
 import { AnimatedSpriteNode } from "../../nodes/animated-sprite.node.ts";
 import { CollisionMask, TILE_SIZE } from "../../lib/constants.ts";
+import { EventTargetMixin } from "../../lib/event-target.decorator.ts";
 
-export class Player extends CanvasItemNode {
+export class Player extends EventTargetMixin(CanvasItemNode) {
     private tilesPerSecond = 6;
     private animatedSpriteNode = new AnimatedSpriteNode({
         spriteSheetPath: 'src/assets/spritesheets/player.png',
@@ -63,7 +64,7 @@ export class Player extends CanvasItemNode {
         const frames = this.animatedSpriteNode.currentAnimation.frames;
         const frame = frames[Math.floor(Date.now() / 150) % frames.length];
 
-        this.ctx.drawImage(frame, this.x, this.y);
+        this.ctx.drawImage(frame, this.x, this.y, this.tileSize, this.tileSize);
     }
 
     update() {
@@ -83,6 +84,8 @@ export class Player extends CanvasItemNode {
                 this.y = this.startY + t * (this.targetY - this.startY);
             }
         }
+
+        this.dispatchEvent(new Event('player:update'));
     }
 
     move(direction: string, map: LevelMap) {

@@ -3,6 +3,7 @@ import { CanvasItemNode } from "../nodes/canvas-item.node.ts";
 import { Input } from "../classes/input.ts";
 import { Objective } from "../scenes/game-objects/objective.ts";
 import { Item } from "./item.ts";
+import { Camera } from "../classes/camera.ts";
 
 export type LevelObjective = {
     item: Item;
@@ -13,7 +14,7 @@ export type LevelObjective = {
 }
 
 export type LevelTile = {
-    nodes: CanvasItemNode[];
+    node: CanvasItemNode;
     collisionMask: number;
 }
 
@@ -26,6 +27,6 @@ export interface Level {
     input: Input;
     onCompleteCallback?: () => void;
 
-    draw(): void;
+    draw(camera: Camera): void;
     onComplete(): void;
 }

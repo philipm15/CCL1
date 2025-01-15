@@ -12,7 +12,7 @@ export class Objective extends CanvasItemNode {
 
     draw() {
         if (this.staticSpriteNode.sprite?.complete) {
-            this.ctx.drawImage(this.staticSpriteNode.sprite, this.x, this.y);
+            this.ctx.drawImage(this.staticSpriteNode.sprite, this.x, this.y, this.tileSize, this.tileSize);
         }
     }
 }
