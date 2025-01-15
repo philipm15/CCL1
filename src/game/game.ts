@@ -1,10 +1,11 @@
-import { CanvasManager } from "./classes/canvas-manager.ts";
-import { Level_1 } from "./scenes/levels/level_1.ts";
-import { Player } from "./scenes/game-objects/player.ts";
-import { Input } from "./classes/input.ts";
-import { Level } from "./types/level.ts";
-import { Level_2 } from "./scenes/levels/level_2.ts";
-import { Camera } from "./classes/camera.ts";
+import {CanvasManager} from "./classes/canvas-manager.ts";
+import {Level_1} from "./scenes/levels/level_1.ts";
+import {Player} from "./scenes/game-objects/player.ts";
+import {Input} from "./classes/input.ts";
+import {Level} from "./types/level.ts";
+import {Level_2} from "./scenes/levels/level_2.ts";
+import {Camera} from "./classes/camera.ts";
+import {TILE_SIZE} from "./lib/constants.ts";
 
 export enum GameLevel {
     Level_1 = 1,
@@ -22,6 +23,7 @@ export class Game {
 
     constructor() {
         this.canvasManager = CanvasManager.getInstance();
+        // this.canvasManager.ctx.scale(2, 2);
 
         this.input.addOnKeyUpCallback((key) => {
             if (['w', 'a', 's', 'd'].includes(key)) {
@@ -31,7 +33,6 @@ export class Game {
 
         this.setLevel(GameLevel.Level_1);
 
-        this.camera.updateCamera(this.player.tileX, this.player.tileY);
         this.player.addEventListener('player:update', () => {
             this.camera.updateCamera(this.player.tileX, this.player.tileY);
         })
@@ -72,6 +73,7 @@ export class Game {
         this.currentLevel.draw(this.camera);
 
         this.drawCurrentObjectives();
+
         this.animationFrameId = requestAnimationFrame(this.gameLoop.bind(this));
     }
 

@@ -1,15 +1,17 @@
 import { Player } from "../game-objects/player.ts";
 import { Input } from "../../classes/input.ts";
 import { LevelMap, LevelObjective } from "../../types/level.ts";
-import { CollisionMask } from "../../lib/constants.ts";
+import {CANVAS_SIZE, CollisionMask, TILE_SIZE} from "../../lib/constants.ts";
 import { Enemy } from "../game-objects/enemy.ts";
 import { Camera } from "../../classes/camera.ts";
+import {CanvasManager} from "../../classes/canvas-manager.ts";
 
 export abstract class LevelTemplate {
     player: Player;
     map: LevelMap = [];
     objectives: LevelObjective[] = [];
     enemies: Enemy[] = [];
+    canvasManager = CanvasManager.getInstance();
 
     input = new Input();
     onCompleteCallback?: () => void;
@@ -29,33 +31,40 @@ export abstract class LevelTemplate {
     }
 
     draw(camera: Camera): void {
-        // const visibleTiles = camera.getVisibleTiles(this.map);
-        //
-        // visibleTiles.forEach(tile => {
-        //     tile.node.draw();
-        // })
+        // Adjust the canvas for the camera's position
+        const ctx = this.canvasManager.ctx; // Replace with your actual canvas context
+        ctx.save();
+        // ctx.translate(-camera.cameraX * TILE_SIZE, -camera.cameraY * TILE_SIZE);
 
-        this.map.flat().forEach(tile => tile.node.draw())
+        // Draw all tiles
+        this.map.flat().forEach(tile => tile.node.draw());
 
+        // Draw all objectives
         this.objectives
             .filter(objective => !objective.acquired)
             .forEach(objective => {
                 objective.node.draw();
             });
 
-        this.enemies.forEach(
-            enemy => {
-                enemy.update();
-                enemy.draw();
-            }
-        )
+        // Draw all enemies
+        this.enemies.forEach(enemy => {
+            enemy.update();
+            enemy.draw();
+        });
 
+        // Draw the player
         this.player.update();
         this.player.draw();
 
+        // Restore the canvas to its original state
+        ctx.restore();
+
+        // Check for interactions and game state
         this.checkIfPlayerCanPickupItem();
         this.checkFailedState();
     }
+
+
 
     onComplete() {
         this.onCompleteCallback && this.onCompleteCallback();

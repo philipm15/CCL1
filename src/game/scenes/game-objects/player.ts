@@ -5,7 +5,7 @@ import { CollisionMask, TILE_SIZE } from "../../lib/constants.ts";
 import { EventTargetMixin } from "../../lib/event-target.decorator.ts";
 
 export class Player extends EventTargetMixin(CanvasItemNode) {
-    private tilesPerSecond = 6;
+    private tilesPerSecond = 4;
     private animatedSpriteNode = new AnimatedSpriteNode({
         spriteSheetPath: 'src/assets/spritesheets/player.png',
         rows: 13,

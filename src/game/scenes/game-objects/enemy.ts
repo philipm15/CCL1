@@ -3,12 +3,12 @@ import {AnimatedSpriteNode} from "../../nodes/animated-sprite.node.ts";
 import {TILE_SIZE} from "../../lib/constants.ts";
 
 export class Enemy extends CanvasItemNode {
-    private tilesPerSecond = 3; // Speed of the enemy
+    private tilesPerSecond = 2; // Speed of the enemy
     private animatedSpriteNode = new AnimatedSpriteNode({
         spriteSheetPath: 'src/assets/spritesheets/enemy_1.png',
         rows: 13,
         cols: 4,
-        defaultAnimation: 'idle_down',
+        defaultAnimation: 'walk_right',
         animations: {
             'idle_down': { row: 0, numberOfSprites: 4 },
             'idle_right': { row: 1, numberOfSprites: 4 },
@@ -31,10 +31,10 @@ export class Enemy extends CanvasItemNode {
     private targetY: number = 0;
     private reverse: boolean = false;
 
-    constructor(tileX: number, tileY: number, path: { x: number; y: number }[], tilesPerSecond = 3) {
+    constructor(tileX: number, tileY: number, path: { x: number; y: number }[], tilesPerSecond?: number) {
         super(tileX * TILE_SIZE, tileY * TILE_SIZE, tileX, tileY);
         this.path = path;
-        this.tilesPerSecond = tilesPerSecond
+        this.tilesPerSecond = tilesPerSecond ?? this.tilesPerSecond;
 
         if (path && path.length > 0) {
             this.startNextMove();

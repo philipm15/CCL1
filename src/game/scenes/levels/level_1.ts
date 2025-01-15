@@ -21,7 +21,7 @@ export class Level_1 extends LevelTemplate {
                         }
 
                         return {
-                            node: new Floor(j, i, j, i),
+                            node: new Floor(j, i, (i + j) % 2 === 1 ? 'lightblue' : 'lightslategray'),
                             collisionMask: CollisionMask.FLOOR
                         }
                     })
