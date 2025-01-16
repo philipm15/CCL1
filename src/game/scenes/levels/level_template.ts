@@ -1,10 +1,12 @@
 import { Player } from "../game-objects/player.ts";
 import { Input } from "../../classes/input.ts";
 import { LevelMap, LevelObjective } from "../../types/level.ts";
-import {CANVAS_SIZE, CollisionMask, TILE_SIZE} from "../../lib/constants.ts";
+import { CollisionMask, TILE_SIZE } from "../../lib/constants.ts";
 import { Enemy } from "../game-objects/enemy.ts";
 import { Camera } from "../../classes/camera.ts";
-import {CanvasManager} from "../../classes/canvas-manager.ts";
+import { CanvasManager } from "../../classes/canvas-manager.ts";
+import { importLevelFromJson, JsonLevelData, LevelLayer } from "../../lib/level-import.ts";
+import { MapBuilder } from "../../classes/map-builder.ts";
 
 export abstract class LevelTemplate {
     player: Player;
@@ -12,6 +14,8 @@ export abstract class LevelTemplate {
     objectives: LevelObjective[] = [];
     enemies: Enemy[] = [];
     canvasManager = CanvasManager.getInstance();
+    mapBuilder = MapBuilder.getInstance();
+    layers: LevelLayer[] = [];
 
     input = new Input();
     onCompleteCallback?: () => void;
@@ -22,7 +26,11 @@ export abstract class LevelTemplate {
         player.setTilePosition(1, 1);
     }
 
-    init() {
+    init(data: JsonLevelData) {
+        this.layers = importLevelFromJson(data);
+        console.log(this.layers);
+        console.log(this.mapBuilder);
+
         (this.objectives || []).forEach(objective => {
             this.setCollisionMask(objective.node.tileX, objective.node.tileY, CollisionMask.ITEM);
         })
@@ -37,7 +45,23 @@ export abstract class LevelTemplate {
         // ctx.translate(-camera.cameraX * TILE_SIZE, -camera.cameraY * TILE_SIZE);
 
         // Draw all tiles
-        this.map.flat().forEach(tile => tile.node.draw());
+        this.layers
+            // .filter(layer => layer.name === 'walls' || layer.name === 'floor')
+            .forEach(layer => {
+            layer.matrix.forEach((row, rowIndex) => {
+                row.forEach((spriteIndex, colIndex) => {
+                    if(layer.name === 'walls' || layer.name === 'floor') {
+                        if(this.mapBuilder.roomBuilderTiles[spriteIndex]) {
+                            ctx.drawImage(this.mapBuilder.roomBuilderTiles[spriteIndex], colIndex * TILE_SIZE, rowIndex * TILE_SIZE, 32, 32)
+                        }
+                    } else {
+                        if(this.mapBuilder.interiorTiles[spriteIndex]) {
+                            ctx.drawImage(this.mapBuilder.interiorTiles[spriteIndex], colIndex * TILE_SIZE, rowIndex * TILE_SIZE, 32, 32)
+                        }
+                    }
+                })
+            })
+        })
 
         // Draw all objectives
         this.objectives

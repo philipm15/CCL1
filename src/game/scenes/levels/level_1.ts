@@ -6,6 +6,7 @@ import {LevelTemplate} from "./level_template.ts";
 import {Enemy} from "../game-objects/enemy.ts";
 import { CollisionMask, MAP_SIZE } from "../../lib/constants.ts";
 import { Wall } from "../game-objects/wall.ts";
+import Level_1_Json from '../../../assets/levels/level_1.json';
 
 export class Level_1 extends LevelTemplate {
     map: LevelMap =
@@ -51,6 +52,7 @@ export class Level_1 extends LevelTemplate {
 
     constructor(player: Player) {
         super(player);
-        this.init();
+        this.init(Level_1_Json);
+        console.log(this.layers);
     }
 }

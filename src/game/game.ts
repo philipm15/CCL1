@@ -1,11 +1,11 @@
-import {CanvasManager} from "./classes/canvas-manager.ts";
-import {Level_1} from "./scenes/levels/level_1.ts";
-import {Player} from "./scenes/game-objects/player.ts";
-import {Input} from "./classes/input.ts";
-import {Level} from "./types/level.ts";
-import {Level_2} from "./scenes/levels/level_2.ts";
-import {Camera} from "./classes/camera.ts";
-import {TILE_SIZE} from "./lib/constants.ts";
+import { CanvasManager } from "./classes/canvas-manager.ts";
+import { Level_1 } from "./scenes/levels/level_1.ts";
+import { Player } from "./scenes/game-objects/player.ts";
+import { Input } from "./classes/input.ts";
+import { Level } from "./types/level.ts";
+import { Level_2 } from "./scenes/levels/level_2.ts";
+import { Camera } from "./classes/camera.ts";
+import { MapBuilder } from "./classes/map-builder.ts";
 
 export enum GameLevel {
     Level_1 = 1,
@@ -19,23 +19,26 @@ export class Game {
     private currentLevel: Level | undefined = undefined;
     private input = new Input();
     private camera = new Camera();
+    private mapBuilder = new MapBuilder();
     animationFrameId: number | undefined;
 
     constructor() {
         this.canvasManager = CanvasManager.getInstance();
+        this.mapBuilder.loadImages().then(() => {
+            this.input.addOnKeyUpCallback((key) => {
+                if (['w', 'a', 's', 'd'].includes(key)) {
+                    this.player.stopMove();
+                }
+            });
+
+            this.setLevel(GameLevel.Level_1);
+
+            this.player.addEventListener('player:update', () => {
+                this.camera.updateCamera(this.player.tileX, this.player.tileY);
+            })
+        });
         // this.canvasManager.ctx.scale(2, 2);
 
-        this.input.addOnKeyUpCallback((key) => {
-            if (['w', 'a', 's', 'd'].includes(key)) {
-                this.player.stopMove();
-            }
-        });
-
-        this.setLevel(GameLevel.Level_1);
-
-        this.player.addEventListener('player:update', () => {
-            this.camera.updateCamera(this.player.tileX, this.player.tileY);
-        })
     }
 
     setLevel(level: GameLevel) {
