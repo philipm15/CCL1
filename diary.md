@@ -12,3 +12,16 @@
 - Linear interpolation for movement
 - Enemy character, auto run a certain path
 - Item pickup, list of objectives
+
+---
+
+## Day 3 - 15.01.2025
+- Tried to implement a camera that follows the character and only shows X tiles arounds the character.
+- Added walls
+- Added color to the floor
+
+---
+
+## Day 4 - 16.01.2025
+- Try to finish Level 1 Map by using a drawn map instead of using separate tiles for the floor, wall, etc.
+
