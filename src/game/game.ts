@@ -25,17 +25,26 @@ export class Game {
     constructor() {
         this.canvasManager = CanvasManager.getInstance();
         this.mapBuilder.loadImages().then(() => {
-            this.input.addOnKeyUpCallback((key) => {
-                if (['w', 'a', 's', 'd'].includes(key)) {
-                    this.player.stopMove();
-                }
-            });
+            // this.input.addOnKeyUpCallback((key) => {
+            //     if (['w', 'a', 's', 'd'].includes(key)) {
+            //         this.player.stopMove();
+            //     }
+            // });
 
             this.setLevel(GameLevel.Level_1);
 
-            this.player.addEventListener('player:update', () => {
-                this.camera.updateCamera(this.player.tileX, this.player.tileY);
+            // this.player.addEventListener('player:update', () => {
+            //     this.camera.updateCamera(this.player.tileX, this.player.tileY);
+            // })
+
+            this.player.addEventListener('player:collided', () => {
+                this.setLevel(this.selectedLevel!);
             })
+
+            Input.onKeyPress(' ', (_, event) => {
+                event.preventDefault();
+                this.currentLevel?.toggleState();
+            });
         });
         // this.canvasManager.ctx.scale(2, 2);
 
@@ -81,12 +90,12 @@ export class Game {
     }
 
     private handleInput() {
-        if (!this.currentLevel) return;
+        if (!this.currentLevel || this.currentLevel?.state !== 'play') return;
 
-        if (this.input.isKeyPressed('w')) this.player.move('up', this.currentLevel.collisionMask);
-        if (this.input.isKeyPressed('s')) this.player.move('down', this.currentLevel.collisionMask);
-        if (this.input.isKeyPressed('a')) this.player.move('left', this.currentLevel.collisionMask);
-        if (this.input.isKeyPressed('d')) this.player.move('right', this.currentLevel.collisionMask);
+        if (this.input.isKeyPressed('w')) this.player.updateDirection('up');
+        if (this.input.isKeyPressed('s')) this.player.updateDirection('down');
+        if (this.input.isKeyPressed('a')) this.player.updateDirection('left');
+        if (this.input.isKeyPressed('d')) this.player.updateDirection('right');
     }
 
     private drawCurrentObjectives() {

@@ -1,31 +1,11 @@
 import { Player } from "../game-objects/player.ts";
-import { LevelObjective } from "../../types/level.ts";
-import { Objective } from "../game-objects/objective.ts";
 import { LevelTemplate } from "./level_template.ts";
 import { Enemy } from "../game-objects/enemy.ts";
 import Level_1_Json from '../../../assets/levels/level_1.json';
 
 export class Level_1 extends LevelTemplate {
-    objectives: LevelObjective[] = [
-        {
-            required: true,
-            acquired: false,
-            item: {
-                name: 'Plant',
-                price: 5,
-                weight: 2
-            },
-            node: new Objective(1, 14, 'src/assets/sprites/plant.png')
-        }
-    ];
-
     enemies = [
-        new Enemy(5, 5, [{x: 5, y: 5},
-            {x: 6, y: 5},
-            {x: 7, y: 5},
-            {x: 7, y: 6},
-            {x: 6, y: 6},
-            {x: 5, y: 6},]),
+        new Enemy(2, 3, [{x: 2, y: 3}, {x: 3, y: 3}, {x: 4, y: 3}, {x: 5, y: 3}, {x: 6, y: 3}, {x: 7, y: 3}])
     ]
 
     constructor(player: Player) {

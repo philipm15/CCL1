@@ -1,14 +1,13 @@
 import { Player } from "../game-objects/player.ts";
 import { Input } from "../../classes/input.ts";
-import { LevelObjective } from "../../types/level.ts";
+import { Level, LevelObjective, LevelState } from "../../types/level.ts";
 import { CollisionMask, TILE_SIZE } from "../../lib/constants.ts";
 import { Enemy } from "../game-objects/enemy.ts";
-import { Camera } from "../../classes/camera.ts";
 import { CanvasManager } from "../../classes/canvas-manager.ts";
 import { importLevelFromJson, JsonLevelData, LevelLayer } from "../../lib/level-import.ts";
 import { MapBuilder } from "../../classes/map-builder.ts";
 
-export abstract class LevelTemplate {
+export abstract class LevelTemplate implements Level {
     player: Player;
     objectives: LevelObjective[] = [];
     enemies: Enemy[] = [];
@@ -16,6 +15,7 @@ export abstract class LevelTemplate {
     mapBuilder = MapBuilder.getInstance();
     layers: LevelLayer[] = [];
     collisionMask: number[][] = [];
+    state: LevelState = 'pause';
 
     onCompleteCallback?: () => void;
     onFailedCallback?: () => void;
@@ -35,7 +35,7 @@ export abstract class LevelTemplate {
         Input.onKeyPress('e', this.onPickup.bind(this));
     }
 
-    draw(camera: Camera): void {
+    draw(): void {
         // Adjust the canvas for the camera's position
         const ctx = this.canvasManager.ctx; // Replace with your actual canvas context
         ctx.save();
@@ -63,7 +63,9 @@ export abstract class LevelTemplate {
 
         // Draw all enemies
         this.enemies.forEach(enemy => {
-            enemy.update();
+            if (this.state === 'play') {
+                enemy.update();
+            }
             enemy.draw();
         });
 
@@ -79,12 +81,13 @@ export abstract class LevelTemplate {
             })
         })
 
+        if (this.state === 'play') {
+            this.player.move(this.player.direction, this.collisionMask);
+        }
 
         // Restore the canvas to its original state
         ctx.restore();
 
-        // Check for interactions and game state
-        this.checkIfPlayerCanPickupItem();
         this.checkFailedState();
     }
 
@@ -101,12 +104,6 @@ export abstract class LevelTemplate {
             this.setCollisionMask(availableObjective.node.tileX, availableObjective.node.tileY, CollisionMask.FLOOR)
             this.checkCompleteState();
         }
-    }
-
-    checkIfPlayerCanPickupItem() {
-        const availableObjective = this.getAvailableObjective();
-
-        // TODO: add indicator to signal that the item can be picked up
     }
 
     getAvailableObjective() {
@@ -149,6 +146,16 @@ export abstract class LevelTemplate {
     checkFailedState() {
         if (this.enemies.some(enemy => enemy.checkCollision(this.player))) {
             this.onFailedCallback && this.onFailedCallback();
+        }
+    }
+
+    toggleState() {
+        if (this.state === 'pause' || this.state === 'fail') {
+            return this.state = 'play';
+        }
+
+        if (this.state === 'play') {
+            return this.state = 'pause';
         }
     }
 }

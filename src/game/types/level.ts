@@ -1,5 +1,4 @@
 import { Player } from "../scenes/game-objects/player.ts";
-import { Input } from "../classes/input.ts";
 import { Objective } from "../scenes/game-objects/objective.ts";
 import { Item } from "./item.ts";
 import { Camera } from "../classes/camera.ts";
@@ -18,10 +17,13 @@ export interface Level {
     player: Player;
     objectives: LevelObjective[];
     collisionMask: LevelMap;
-    input: Input;
     onCompleteCallback?: () => void;
     onFailedCallback?: () => void;
+    state: 'pause' | 'play' | 'fail';
 
     draw(camera: Camera): void;
     onComplete(): void;
+    toggleState(): void;
 }
+
+export type LevelState = Level["state"];

@@ -128,11 +128,13 @@ export class Player extends EventTargetMixin(CanvasItemNode) {
             this.targetY = this.tileY * TILE_SIZE;
             this.moveStartTime = Date.now();
             this.moving = true;
+        } else {
+            this.dispatchEvent(new Event('player:collided'));
         }
     }
 
     stopMove(direction: Player["direction"] = this.direction) {
-        this.direction = direction;
+        this.updateDirection(direction);
         this.animatedSpriteNode.playAnimation(`idle_${this.direction}`);
     }
 
@@ -142,5 +144,9 @@ export class Player extends EventTargetMixin(CanvasItemNode) {
         this.x = this.tileX * TILE_SIZE;
         this.y = this.tileY * TILE_SIZE;
         this.moving = false;
+    }
+
+    updateDirection(direction: Player["direction"] = this.direction) {
+        this.direction = direction;
     }
 }
