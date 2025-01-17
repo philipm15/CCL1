@@ -10,7 +10,7 @@ export function EventTargetMixin<T extends new (...args: any[]) => any>(Base: T)
             this.eventTarget.removeEventListener(type, listener, options);
         }
 
-        dispatchEvent(event: Event): boolean {
+        dispatchEvent(event: Event | CustomEvent): boolean {
             return this.eventTarget.dispatchEvent(event);
         }
     };

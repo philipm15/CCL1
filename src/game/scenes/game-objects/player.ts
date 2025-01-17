@@ -3,6 +3,10 @@ import { AnimatedSpriteNode } from "../../nodes/animated-sprite.node.ts";
 import { CollisionMask, MAP_SIZE, TILE_SIZE } from "../../lib/constants.ts";
 import { EventTargetMixin } from "../../lib/event-target.decorator.ts";
 
+export type PlayerCollidedEvent = {
+    collisionMask: number;
+}
+
 export class Player extends EventTargetMixin(CanvasItemNode) {
     private tilesPerSecond = 4;
     private animatedSpriteNode = new AnimatedSpriteNode({
@@ -110,14 +114,14 @@ export class Player extends EventTargetMixin(CanvasItemNode) {
             this.direction = 'right';
         }
 
-        this.animatedSpriteNode.playAnimation(`walk_${this.direction}`);
+        this.animatedSpriteNode.playAnimation(`walk_${ this.direction }`);
 
         if (
             newTileX >= 0 &&
             newTileX < MAP_SIZE &&
             newTileY >= 0 &&
             newTileY < MAP_SIZE &&
-            collisionMask[newTileY][newTileX] === CollisionMask.FLOOR
+            collisionMask[newTileY][newTileX] <= CollisionMask.FLOOR
         ) {
             this.tileX = newTileX;
             this.tileY = newTileY;
@@ -129,13 +133,17 @@ export class Player extends EventTargetMixin(CanvasItemNode) {
             this.moveStartTime = Date.now();
             this.moving = true;
         } else {
-            this.dispatchEvent(new Event('player:collided'));
+            this.dispatchEvent(new CustomEvent<PlayerCollidedEvent>('player:collided', {
+                detail: {
+                    collisionMask: collisionMask[newTileY][newTileX],
+                }
+            }));
         }
     }
 
     stopMove(direction: Player["direction"] = this.direction) {
         this.updateDirection(direction);
-        this.animatedSpriteNode.playAnimation(`idle_${this.direction}`);
+        this.animatedSpriteNode.playAnimation(`idle_${ this.direction }`);
     }
 
     setTilePosition(tileX: number, tileY: number) {
