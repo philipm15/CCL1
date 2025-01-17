@@ -1,6 +1,6 @@
 import { Player } from "../game-objects/player.ts";
 import { Input } from "../../classes/input.ts";
-import { LevelMap, LevelObjective } from "../../types/level.ts";
+import { LevelObjective } from "../../types/level.ts";
 import { CollisionMask, TILE_SIZE } from "../../lib/constants.ts";
 import { Enemy } from "../game-objects/enemy.ts";
 import { Camera } from "../../classes/camera.ts";
@@ -10,9 +10,6 @@ import { MapBuilder } from "../../classes/map-builder.ts";
 
 export abstract class LevelTemplate {
     player: Player;
-    map: LevelMap = Array.from({length: 20}).map(
-        () => Array.from({length: 20}).map(() => 0)
-    );
     objectives: LevelObjective[] = [];
     enemies: Enemy[] = [];
     canvasManager = CanvasManager.getInstance();
@@ -20,7 +17,6 @@ export abstract class LevelTemplate {
     layers: LevelLayer[] = [];
     collisionMask: number[][] = [];
 
-    input = new Input();
     onCompleteCallback?: () => void;
     onFailedCallback?: () => void;
 
@@ -99,6 +95,7 @@ export abstract class LevelTemplate {
 
     onPickup() {
         const availableObjective = this.getAvailableObjective();
+        console.log({availableObjective});
         if (availableObjective) {
             availableObjective.acquired = true;
             this.setCollisionMask(availableObjective.node.tileX, availableObjective.node.tileY, CollisionMask.FLOOR)
@@ -138,7 +135,7 @@ export abstract class LevelTemplate {
     }
 
     setCollisionMask(tileX: number, tileY: number, collisionMask: CollisionMask) {
-        this.map[tileX][tileY] = collisionMask;
+        this.collisionMask[tileY][tileX] = collisionMask;
     }
 
     checkCompleteState() {

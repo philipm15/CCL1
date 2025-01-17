@@ -15,7 +15,7 @@ export class Level_1 extends LevelTemplate {
                 price: 5,
                 weight: 2
             },
-            node: new Objective(10, 5, 'src/assets/sprites/plant.png')
+            node: new Objective(1, 14, 'src/assets/sprites/plant.png')
         }
     ];
 

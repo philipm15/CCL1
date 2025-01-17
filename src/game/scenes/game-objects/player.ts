@@ -1,5 +1,4 @@
 import { CanvasItemNode } from "../../nodes/canvas-item.node.ts";
-import { LevelMap } from "../../types/level.ts";
 import { AnimatedSpriteNode } from "../../nodes/animated-sprite.node.ts";
 import { CollisionMask, MAP_SIZE, TILE_SIZE } from "../../lib/constants.ts";
 import { EventTargetMixin } from "../../lib/event-target.decorator.ts";
