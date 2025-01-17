@@ -2,8 +2,7 @@ import { extractSpritesFromSpritesheet } from "../lib/sprite.ts";
 
 export class MapBuilder {
     private static instance: MapBuilder;
-    interiorTiles: Record<number, HTMLCanvasElement> = {};
-    roomBuilderTiles: Record<number, HTMLCanvasElement> = {};
+    tiles: Record<string, HTMLCanvasElement> = {};
 
     async loadImages(): Promise<void> {
         const instance = MapBuilder.getInstance();
@@ -18,13 +17,14 @@ export class MapBuilder {
 
         return Promise.all([
             loadImage('src/assets/spritesheets/interior.png').then((interiorImage) => {
-                instance.interiorTiles = extractSpritesFromSpritesheet(interiorImage, 89, 16);
+                return extractSpritesFromSpritesheet(interiorImage, 89, 16, 392);
             }),
             loadImage('src/assets/spritesheets/room_builder.png').then((roomBuilderImage) => {
-                instance.roomBuilderTiles = extractSpritesFromSpritesheet(roomBuilderImage, 23, 17);
+                return extractSpritesFromSpritesheet(roomBuilderImage, 23, 17);
             }),
-        ]).then(() => {
+        ]).then(([interiorTiles, roomBuilderTiles]) => {
             console.log("All images loaded successfully!");
+            instance.tiles = {...roomBuilderTiles, ...interiorTiles};
         }).catch((err) => {
             console.error(err);
         });

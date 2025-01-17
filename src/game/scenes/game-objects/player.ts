@@ -1,7 +1,7 @@
 import { CanvasItemNode } from "../../nodes/canvas-item.node.ts";
 import { LevelMap } from "../../types/level.ts";
 import { AnimatedSpriteNode } from "../../nodes/animated-sprite.node.ts";
-import { CollisionMask, TILE_SIZE } from "../../lib/constants.ts";
+import { CollisionMask, MAP_SIZE, TILE_SIZE } from "../../lib/constants.ts";
 import { EventTargetMixin } from "../../lib/event-target.decorator.ts";
 
 export class Player extends EventTargetMixin(CanvasItemNode) {
@@ -88,7 +88,7 @@ export class Player extends EventTargetMixin(CanvasItemNode) {
         this.dispatchEvent(new Event('player:update'));
     }
 
-    move(direction: string, map: LevelMap) {
+    move(direction: string, collisionMask: number[][]) {
         if (this.moving) return; // Ignore input during movement
 
         let newTileX = this.tileX;
@@ -115,10 +115,10 @@ export class Player extends EventTargetMixin(CanvasItemNode) {
 
         if (
             newTileX >= 0 &&
-            newTileX < map[0].length &&
+            newTileX < MAP_SIZE &&
             newTileY >= 0 &&
-            newTileY < map.length &&
-            map[newTileX][newTileY].collisionMask === CollisionMask.FLOOR
+            newTileY < MAP_SIZE &&
+            collisionMask[newTileY][newTileX] === CollisionMask.FLOOR
         ) {
             this.tileX = newTileX;
             this.tileY = newTileY;
@@ -132,7 +132,8 @@ export class Player extends EventTargetMixin(CanvasItemNode) {
         }
     }
 
-    stopMove() {
+    stopMove(direction: Player["direction"] = this.direction) {
+        this.direction = direction;
         this.animatedSpriteNode.playAnimation(`idle_${this.direction}`);
     }
 

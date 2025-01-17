@@ -1,33 +1,11 @@
-import {Player} from "../game-objects/player.ts";
-import {LevelMap, LevelObjective} from "../../types/level.ts";
-import {Floor} from "../game-objects/floor.ts";
-import {Objective} from "../game-objects/objective.ts";
-import {LevelTemplate} from "./level_template.ts";
-import {Enemy} from "../game-objects/enemy.ts";
-import { CollisionMask, MAP_SIZE } from "../../lib/constants.ts";
-import { Wall } from "../game-objects/wall.ts";
+import { Player } from "../game-objects/player.ts";
+import { LevelObjective } from "../../types/level.ts";
+import { Objective } from "../game-objects/objective.ts";
+import { LevelTemplate } from "./level_template.ts";
+import { Enemy } from "../game-objects/enemy.ts";
 import Level_1_Json from '../../../assets/levels/level_1.json';
 
 export class Level_1 extends LevelTemplate {
-    map: LevelMap =
-        Array.from({length: 20})
-            .map((_, i) => {
-                return Array.from({length: 20})
-                    .map((_, j) => {
-                        if(i === 0 || i === MAP_SIZE - 1 || j === 0 || j === MAP_SIZE - 1) {
-                            return {
-                                node: new Wall(j, i, j, i),
-                                collisionMask: CollisionMask.STATIC
-                            }
-                        }
-
-                        return {
-                            node: new Floor(j, i, (i + j) % 2 === 1 ? 'lightblue' : 'lightslategray'),
-                            collisionMask: CollisionMask.FLOOR
-                        }
-                    })
-            })
-
     objectives: LevelObjective[] = [
         {
             required: true,
@@ -52,7 +30,8 @@ export class Level_1 extends LevelTemplate {
 
     constructor(player: Player) {
         super(player);
+        player.stopMove('up');
+        player.setTilePosition(3, 18);
         this.init(Level_1_Json);
-        console.log(this.layers);
     }
 }

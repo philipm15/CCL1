@@ -10,6 +10,6 @@ export class Floor extends CanvasItemNode {
 
     draw() {
         this.ctx.fillStyle = this.color;
-        this.ctx.fillRect(this.x * this.tileSize, this.y * this.tileSize, this.tileSize + 1, this.tileSize + 1);
+        this.ctx.fillRect(this.x * this.tileSize, this.y * this.tileSize, this.tileSize, this.tileSize);
     }
 }

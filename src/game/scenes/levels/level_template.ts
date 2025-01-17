@@ -10,12 +10,15 @@ import { MapBuilder } from "../../classes/map-builder.ts";
 
 export abstract class LevelTemplate {
     player: Player;
-    map: LevelMap = [];
+    map: LevelMap = Array.from({length: 20}).map(
+        () => Array.from({length: 20}).map(() => 0)
+    );
     objectives: LevelObjective[] = [];
     enemies: Enemy[] = [];
     canvasManager = CanvasManager.getInstance();
     mapBuilder = MapBuilder.getInstance();
     layers: LevelLayer[] = [];
+    collisionMask: number[][] = [];
 
     input = new Input();
     onCompleteCallback?: () => void;
@@ -28,9 +31,7 @@ export abstract class LevelTemplate {
 
     init(data: JsonLevelData) {
         this.layers = importLevelFromJson(data);
-        console.log(this.layers);
-        console.log(this.mapBuilder);
-
+        this.collisionMask = this.layers.find(layer => layer.name === 'collide')!.matrix;
         (this.objectives || []).forEach(objective => {
             this.setCollisionMask(objective.node.tileX, objective.node.tileY, CollisionMask.ITEM);
         })
@@ -46,22 +47,16 @@ export abstract class LevelTemplate {
 
         // Draw all tiles
         this.layers
-            // .filter(layer => layer.name === 'walls' || layer.name === 'floor')
+            .slice(0, -1)
             .forEach(layer => {
-            layer.matrix.forEach((row, rowIndex) => {
-                row.forEach((spriteIndex, colIndex) => {
-                    if(layer.name === 'walls' || layer.name === 'floor') {
-                        if(this.mapBuilder.roomBuilderTiles[spriteIndex]) {
-                            ctx.drawImage(this.mapBuilder.roomBuilderTiles[spriteIndex], colIndex * TILE_SIZE, rowIndex * TILE_SIZE, 32, 32)
+                layer.matrix.forEach((row, rowIndex) => {
+                    row.forEach((spriteIndex, colIndex) => {
+                        if (this.mapBuilder.tiles[spriteIndex]) {
+                            ctx.drawImage(this.mapBuilder.tiles[spriteIndex], colIndex * TILE_SIZE, rowIndex * TILE_SIZE, 32, 32);
                         }
-                    } else {
-                        if(this.mapBuilder.interiorTiles[spriteIndex]) {
-                            ctx.drawImage(this.mapBuilder.interiorTiles[spriteIndex], colIndex * TILE_SIZE, rowIndex * TILE_SIZE, 32, 32)
-                        }
-                    }
+                    })
                 })
             })
-        })
 
         // Draw all objectives
         this.objectives
@@ -80,6 +75,15 @@ export abstract class LevelTemplate {
         this.player.update();
         this.player.draw();
 
+        this.layers.at(-1)!.matrix.forEach((row, rowIndex) => {
+            row.forEach((spriteIndex, colIndex) => {
+                if (this.mapBuilder.tiles[spriteIndex]) {
+                    ctx.drawImage(this.mapBuilder.tiles[spriteIndex], colIndex * TILE_SIZE, rowIndex * TILE_SIZE, 32, 32);
+                }
+            })
+        })
+
+
         // Restore the canvas to its original state
         ctx.restore();
 
@@ -87,7 +91,6 @@ export abstract class LevelTemplate {
         this.checkIfPlayerCanPickupItem();
         this.checkFailedState();
     }
-
 
 
     onComplete() {
@@ -135,7 +138,7 @@ export abstract class LevelTemplate {
     }
 
     setCollisionMask(tileX: number, tileY: number, collisionMask: CollisionMask) {
-        this.map[tileX][tileY].collisionMask = collisionMask;
+        this.map[tileX][tileY] = collisionMask;
     }
 
     checkCompleteState() {
@@ -147,8 +150,8 @@ export abstract class LevelTemplate {
     }
 
     checkFailedState() {
-         if(this.enemies.some(enemy => enemy.checkCollision(this.player))) {
-             this.onFailedCallback && this.onFailedCallback();
-         }
+        if (this.enemies.some(enemy => enemy.checkCollision(this.player))) {
+            this.onFailedCallback && this.onFailedCallback();
+        }
     }
 }

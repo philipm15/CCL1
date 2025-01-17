@@ -83,10 +83,10 @@ export class Game {
     private handleInput() {
         if (!this.currentLevel) return;
 
-        if (this.input.isKeyPressed('w')) this.player.move('up', this.currentLevel.map);
-        if (this.input.isKeyPressed('s')) this.player.move('down', this.currentLevel.map);
-        if (this.input.isKeyPressed('a')) this.player.move('left', this.currentLevel.map);
-        if (this.input.isKeyPressed('d')) this.player.move('right', this.currentLevel.map);
+        if (this.input.isKeyPressed('w')) this.player.move('up', this.currentLevel.collisionMask);
+        if (this.input.isKeyPressed('s')) this.player.move('down', this.currentLevel.collisionMask);
+        if (this.input.isKeyPressed('a')) this.player.move('left', this.currentLevel.collisionMask);
+        if (this.input.isKeyPressed('d')) this.player.move('right', this.currentLevel.collisionMask);
     }
 
     private drawCurrentObjectives() {

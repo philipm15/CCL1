@@ -47,6 +47,7 @@ export function extractSpritesFromSpritesheet(
     image: HTMLImageElement,
     rows: number,
     columns: number,
+    firstId = 0,
     tileWidth: number = TILE_SIZE,
     tileHeight: number = TILE_SIZE
 ): Record<number, HTMLCanvasElement> {
@@ -89,7 +90,7 @@ export function extractSpritesFromSpritesheet(
             );
 
             // Store the canvas in the map with its index
-            spriteMap[spriteIndex] = spriteCanvas;
+            spriteMap[spriteIndex + firstId] = spriteCanvas;
         }
     }
 

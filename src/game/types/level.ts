@@ -18,12 +18,13 @@ export type LevelTile = {
     collisionMask: number;
 }
 
-export type LevelMap = LevelTile[][];
+export type LevelMap = number[][];
 
 export interface Level {
     player: Player;
     objectives: LevelObjective[];
     map: LevelMap;
+    collisionMask: number[][];
     input: Input;
     onCompleteCallback?: () => void;
     onFailedCallback?: () => void;
