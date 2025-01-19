@@ -26,6 +26,7 @@ export interface Level {
     draw(camera: Camera): void;
     onComplete(): void;
     toggleState(): void;
+    destroy(): void;
 }
 
 export type LevelState = Level["state"];

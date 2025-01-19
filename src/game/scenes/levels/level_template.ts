@@ -196,10 +196,16 @@ export class LevelTemplate extends EventTargetBase implements Level {
         if (collisionMask === CollisionMask.ITEM) {
             this.score++;
             const objective = this.objectives[0]!;
+            console.log(this.objectives)
             this.setCollisionMask(objective.node.tileX, objective.node.tileY, CollisionMask.FLOOR);
             this.objectives.pop();
 
             this.dispatchEvent(new Event('level:score_update'));
         }
+    }
+
+    destroy() {
+        this.player.removeEventListener('player:collided', this.onPlayerCollision);
+        console.log("destroy!", this.player)
     }
 }

@@ -130,6 +130,10 @@ export class Game {
         if (this.animationFrameId !== undefined) {
             window.cancelAnimationFrame(this.animationFrameId);
         }
+
+        if(this.currentLevel) {
+            this.currentLevel.destroy();
+        }
     }
 
     private handleScoreUpdate() {

@@ -35,3 +35,9 @@
   - implementing an endless game now where the character walks automatically and the user can only change the direction with WASD.
   - Player has to collect randomly spawning items without colliding with "enemies" or objects
   - added pause/restart function by pressing space
+
+---
+
+## Day 6 - 19.01.2025
+- Added randomly spawning items that can be collected and increase the score
+- WIP: remove event listeners when level is destroyed
