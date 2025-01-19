@@ -8,7 +8,7 @@ document.querySelector<HTMLDivElement>('#app')!.innerHTML = `
         <button data-level="Level_2">Level 2</button>
     </div>
     <canvas id="gameCanvas" height="640" width="640"></canvas>
-    <div id="gameObjectives"></div>
+<!--    <div id="gameObjectives"></div>-->
 </div>
 `
 const game = new Game();

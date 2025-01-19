@@ -1,11 +1,12 @@
 import { CanvasManager } from "./classes/canvas-manager.ts";
 import { Level_1 } from "./scenes/levels/level_1.ts";
-import { Player } from "./scenes/game-objects/player.ts";
+import {Player, PlayerCollidedEvent} from "./scenes/game-objects/player.ts";
 import { Input } from "./classes/input.ts";
 import { Level } from "./types/level.ts";
 import { Level_2 } from "./scenes/levels/level_2.ts";
 import { Camera } from "./classes/camera.ts";
 import { MapBuilder } from "./classes/map-builder.ts";
+import {CollisionMask} from "./lib/constants.ts";
 
 export enum GameLevel {
     Level_1 = 1,
@@ -37,8 +38,10 @@ export class Game {
             //     this.camera.updateCamera(this.player.tileX, this.player.tileY);
             // })
 
-            this.player.addEventListener('player:collided', () => {
-                this.setLevel(this.selectedLevel!);
+            this.player.addEventListener('player:collided', (event: CustomEvent<PlayerCollidedEvent>) => {
+                if(event.detail.collisionMask > CollisionMask.FLOOR) {
+                    this.setLevel(this.selectedLevel!);
+                }
             })
 
             Input.onKeyPress(' ', (_, event) => {
@@ -84,7 +87,7 @@ export class Game {
         this.handleInput();
         this.currentLevel.draw(this.camera);
 
-        this.drawCurrentObjectives();
+        // this.drawCurrentObjectives();
 
         this.animationFrameId = requestAnimationFrame(this.gameLoop.bind(this));
     }
@@ -98,34 +101,38 @@ export class Game {
         if (this.input.isKeyPressed('d')) this.player.updateDirection('right');
     }
 
-    private drawCurrentObjectives() {
-        const objectives = this.currentLevel?.objectives ?? [];
-        const gameObjectivesDiv = this.canvasManager.objectivesDiv;
-        gameObjectivesDiv.replaceChildren();
-        objectives.forEach((objective) => {
-            const image = objective.node.staticSpriteNode.sprite;
-
-            if (image) {
-                const div = document.createElement("div");
-                div.classList.add("game-objective-entry");
-
-                const span = div.appendChild(document.createElement("span"));
-                span.innerHTML = objective.item.name;
-
-                if (objective.acquired) {
-                    span.classList.add("line-through");
-                }
-
-                div.appendChild(image);
-
-                gameObjectivesDiv.appendChild(div);
-            }
-        })
-    }
+    // private drawCurrentObjectives() {
+    //     const objectives = this.currentLevel?.objectives ?? [];
+    //     const gameObjectivesDiv = this.canvasManager.objectivesDiv;
+    //     gameObjectivesDiv.replaceChildren();
+    //     objectives.forEach((objective) => {
+    //         const image = objective.node.staticSpriteNode.sprite;
+    //
+    //         if (image) {
+    //             const div = document.createElement("div");
+    //             div.classList.add("game-objective-entry");
+    //
+    //             const span = div.appendChild(document.createElement("span"));
+    //             span.innerHTML = objective.item.name;
+    //
+    //             if (objective.acquired) {
+    //                 span.classList.add("line-through");
+    //             }
+    //
+    //             div.appendChild(image);
+    //
+    //             gameObjectivesDiv.appendChild(div);
+    //         }
+    //     })
+    // }
 
     private cancelCurrentLevel() {
         if (this.animationFrameId !== undefined) {
             window.cancelAnimationFrame(this.animationFrameId);
         }
+    }
+
+    private handleScoreUpdate() {
+        console.log("Score: ", this.currentLevel?.score);
     }
 }

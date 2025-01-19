@@ -1,7 +1,7 @@
-import { CanvasItemNode } from "../../nodes/canvas-item.node.ts";
-import { AnimatedSpriteNode } from "../../nodes/animated-sprite.node.ts";
-import { CollisionMask, MAP_SIZE, TILE_SIZE } from "../../lib/constants.ts";
-import { EventTargetMixin } from "../../lib/event-target.decorator.ts";
+import {CanvasItemNode} from "../../nodes/canvas-item.node.ts";
+import {AnimatedSpriteNode} from "../../nodes/animated-sprite.node.ts";
+import {CollisionMask, MAP_SIZE, TILE_SIZE} from "../../lib/constants.ts";
+import {EventTargetMixin} from "../../lib/event-target.decorator.ts";
 
 export type PlayerCollidedEvent = {
     collisionMask: number;
@@ -114,7 +114,7 @@ export class Player extends EventTargetMixin(CanvasItemNode) {
             this.direction = 'right';
         }
 
-        this.animatedSpriteNode.playAnimation(`walk_${ this.direction }`);
+        this.animatedSpriteNode.playAnimation(`walk_${this.direction}`);
 
         if (
             newTileX >= 0 &&
@@ -132,6 +132,14 @@ export class Player extends EventTargetMixin(CanvasItemNode) {
             this.targetY = this.tileY * TILE_SIZE;
             this.moveStartTime = Date.now();
             this.moving = true;
+
+            if (collisionMask[newTileY][newTileX] < CollisionMask.FLOOR) {
+                this.dispatchEvent(new CustomEvent<PlayerCollidedEvent>('player:collided', {
+                    detail: {
+                        collisionMask: collisionMask[newTileY][newTileX],
+                    }
+                }));
+            }
         } else {
             this.dispatchEvent(new CustomEvent<PlayerCollidedEvent>('player:collided', {
                 detail: {
@@ -143,7 +151,7 @@ export class Player extends EventTargetMixin(CanvasItemNode) {
 
     stopMove(direction: Player["direction"] = this.direction) {
         this.updateDirection(direction);
-        this.animatedSpriteNode.playAnimation(`idle_${ this.direction }`);
+        this.animatedSpriteNode.playAnimation(`idle_${this.direction}`);
     }
 
     setTilePosition(tileX: number, tileY: number) {

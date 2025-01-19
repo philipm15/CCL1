@@ -15,11 +15,13 @@ export type LevelMap = number[][];
 
 export interface Level {
     player: Player;
-    objectives: LevelObjective[];
+    objectives: LevelPickup[];
     collisionMask: LevelMap;
     onCompleteCallback?: () => void;
     onFailedCallback?: () => void;
     state: 'pause' | 'play' | 'fail';
+    possibleSpawnLocations: LevelMapPosition[];
+    score: number;
 
     draw(camera: Camera): void;
     onComplete(): void;
@@ -27,3 +29,13 @@ export interface Level {
 }
 
 export type LevelState = Level["state"];
+
+export type LevelPickup<T = unknown> = {
+    node: Objective;
+    item?: T;
+}
+
+export type LevelMapPosition = {
+    x: number;
+    y: number;
+}
