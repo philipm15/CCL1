@@ -1,6 +1,6 @@
 import {Player, PlayerCollidedEvent} from "../game-objects/player.ts";
 import {Level, LevelMapPosition, LevelPickup, LevelState} from "../../types/level.ts";
-import {CollisionMask, TILE_SIZE} from "../../lib/constants.ts";
+import {CollisionMask, PLAYER_SPEED, TILE_SIZE} from "../../lib/constants.ts";
 import {Enemy} from "../game-objects/enemy.ts";
 import {CanvasManager} from "../../classes/canvas-manager.ts";
 import {importLevelFromJson, JsonLevelData, LevelLayer} from "../../lib/level-import.ts";
@@ -89,6 +89,12 @@ export class LevelTemplate extends EventTargetBase implements Level {
         // Draw the player
         this.player.update();
         this.player.draw();
+
+        if(this.score > 0 && this.score % 3 === 0) {
+            this.player.tilesPerSecond = PLAYER_SPEED * 1.5;
+        } else {
+            this.player.tilesPerSecond = PLAYER_SPEED;
+        }
 
         this.layers.at(-1)!.matrix.forEach((row, rowIndex) => {
             row.forEach((spriteIndex, colIndex) => {

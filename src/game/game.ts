@@ -87,7 +87,7 @@ export class Game {
         this.handleInput();
         this.currentLevel.draw(this.camera);
 
-        // this.drawCurrentObjectives();
+        this.handleScoreUpdate();
 
         this.animationFrameId = requestAnimationFrame(this.gameLoop.bind(this));
     }
@@ -137,6 +137,10 @@ export class Game {
     }
 
     private handleScoreUpdate() {
-        console.log("Score: ", this.currentLevel?.score);
+        const scoreText = this.canvasManager.scoreText;
+        const score = +((scoreText.innerText.split(':') || ['0']).at(-1)?.trim() ?? 0);
+        if(this.currentLevel?.score !== score) {
+            scoreText.innerText = `SCORE: ${this.currentLevel?.score ?? 0}`;
+        }
     }
 }

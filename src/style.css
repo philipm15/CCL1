@@ -73,6 +73,13 @@ button {
     background-color: #846662;
     margin-top: auto;
     margin-bottom: auto;
+    position: relative;
+
+    #scoreText {
+        position: absolute;
+        bottom: 0;
+        left: 28px;
+    }
 
     .launch-screen {
         display: grid;

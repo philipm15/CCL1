@@ -1,6 +1,6 @@
 import {CanvasItemNode} from "../../nodes/canvas-item.node.ts";
 import {AnimatedSpriteNode} from "../../nodes/animated-sprite.node.ts";
-import {CollisionMask, MAP_SIZE, TILE_SIZE} from "../../lib/constants.ts";
+import {CollisionMask, MAP_SIZE, PLAYER_SPEED, TILE_SIZE} from "../../lib/constants.ts";
 import {EventTargetMixin} from "../../lib/event-target.decorator.ts";
 
 export type PlayerCollidedEvent = {
@@ -8,7 +8,7 @@ export type PlayerCollidedEvent = {
 }
 
 export class Player extends EventTargetMixin(CanvasItemNode) {
-    private tilesPerSecond = 4;
+    tilesPerSecond = PLAYER_SPEED;
     private animatedSpriteNode = new AnimatedSpriteNode({
         spriteSheetPath: 'src/assets/spritesheets/player.png',
         rows: 13,

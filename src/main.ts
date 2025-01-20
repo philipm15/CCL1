@@ -8,6 +8,7 @@ document.querySelector<HTMLDivElement>('#app')!.innerHTML = `
 <!--        <button data-level="Level_2">Level 2</button>-->
 <!--    </div>-->
     <div class="screen-container">
+            <span id="scoreText">SCORE: 0</span>
             <div id="launchScreen" class="launch-screen">
                 <div class="game-screen">
                 </div>
