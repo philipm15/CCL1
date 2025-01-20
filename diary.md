@@ -41,3 +41,11 @@
 ## Day 6 - 19.01.2025
 - Added randomly spawning items that can be collected and increase the score
 - WIP: remove event listeners when level is destroyed
+
+---
+
+## Day 7 - 20.01.2025
+- Added launch screen
+- Add score counter
+- Increase player after picking up x items
+- Fix wall drawing
