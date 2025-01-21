@@ -3,8 +3,8 @@ import { LevelConfig } from "../../types/level.ts";
 
 export const Level_1: LevelConfig = {
     jsonData: Level_1_Json,
-    player1Position: {x: 3, y: 18, direction: 'up'},
-    player2Position: {x: 18, y: 18, direction: 'up'},
+    player1Position: {x: 8, y: 19, direction: 'up'},
+    player2Position: {x: 11, y: 19, direction: 'up'},
     enemies: [
         {
             position: {x: 2, y: 3},

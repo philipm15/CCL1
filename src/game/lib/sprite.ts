@@ -47,7 +47,7 @@ export function extractSpritesFromSpritesheet(
     image: HTMLImageElement,
     rows: number,
     columns: number,
-    firstId = 0,
+    firstId = 1,
     tileWidth: number = TILE_SIZE,
     tileHeight: number = TILE_SIZE
 ): Record<number, HTMLCanvasElement> {

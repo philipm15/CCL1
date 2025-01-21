@@ -212,7 +212,7 @@ export class LevelTemplate extends EventTargetBase implements Level {
                     if (this.player1.tilesPerSecond < PLAYER_SPEED) {
                         this.player1.tilesPerSecond = PLAYER_SPEED;
                     }
-                }, 1200)
+                }, 900)
             }
         }
     }
@@ -253,7 +253,7 @@ export class LevelTemplate extends EventTargetBase implements Level {
                     if (this.player2.tilesPerSecond < PLAYER_SPEED) {
                         this.player2.tilesPerSecond = PLAYER_SPEED;
                     }
-                }, 1200)
+                }, 900)
             }
         }
     }
