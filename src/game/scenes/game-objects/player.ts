@@ -57,8 +57,10 @@ export class Player extends EventTargetMixin(CanvasItemNode) {
     private targetX: number = 0;
     private targetY: number = 0;
 
-    constructor(tileX: number, tileY: number) {
+    constructor(tileX: number, tileY: number, spriteSheetPath: string = 'src/assets/spritesheets/player.png') {
         super(tileX * TILE_SIZE, tileY * TILE_SIZE, tileX, tileY);
+        this.animatedSpriteNode.config.spriteSheetPath = spriteSheetPath;
+        this.animatedSpriteNode.init();
     }
 
     draw() {

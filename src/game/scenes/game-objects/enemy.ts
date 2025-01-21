@@ -35,6 +35,7 @@ export class Enemy extends CanvasItemNode {
         super(tileX * TILE_SIZE, tileY * TILE_SIZE, tileX, tileY);
         this.path = path;
         this.tilesPerSecond = tilesPerSecond ?? this.tilesPerSecond;
+        this.animatedSpriteNode.init();
 
         if (path && path.length > 0) {
             this.startNextMove();

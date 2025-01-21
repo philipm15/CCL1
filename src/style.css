@@ -75,10 +75,17 @@ button {
     margin-bottom: auto;
     position: relative;
 
-    #scoreText {
+    #scoreText1, #scoreText2 {
         position: absolute;
         bottom: 0;
+    }
+
+    #scoreText1 {
         left: 28px;
+    }
+
+    #scoreText2 {
+        right: 28px;
     }
 
     .launch-screen {

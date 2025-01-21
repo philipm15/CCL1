@@ -49,3 +49,9 @@
 - Add score counter
 - Increase player after picking up x items
 - Fix wall drawing
+
+--- 
+## Day 8 - 21.01.2025
+- Refactored level_template.ts, now there's only one instance for the level which can be updated with a LevelConfig
+- Added multiplayer support, add second player instance that can be controlled with Arrow Keys
+  - Players are being place to the starting position after colliding

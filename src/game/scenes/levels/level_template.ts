@@ -1,16 +1,18 @@
-import {Player, PlayerCollidedEvent} from "../game-objects/player.ts";
-import {Level, LevelMapPosition, LevelPickup, LevelState} from "../../types/level.ts";
-import {CollisionMask, PLAYER_SPEED, TILE_SIZE} from "../../lib/constants.ts";
-import {Enemy} from "../game-objects/enemy.ts";
-import {CanvasManager} from "../../classes/canvas-manager.ts";
-import {importLevelFromJson, JsonLevelData, LevelLayer} from "../../lib/level-import.ts";
-import {MapBuilder} from "../../classes/map-builder.ts";
-import {Objective} from "../game-objects/objective.ts";
-import {getRandomArrayEntry, shuffleArray} from "../../lib/array-helpers.ts";
-import {EventTargetBase} from "../../lib/event-target.decorator.ts";
+import { Player, PlayerCollidedEvent } from "../game-objects/player.ts";
+import { Level, LevelConfig, LevelMapPosition, LevelPickup, LevelState } from "../../types/level.ts";
+import { CollisionMask, PLAYER_SPEED, TILE_SIZE } from "../../lib/constants.ts";
+import { Enemy } from "../game-objects/enemy.ts";
+import { CanvasManager } from "../../classes/canvas-manager.ts";
+import { importLevelFromJson, LevelLayer } from "../../lib/level-import.ts";
+import { MapBuilder } from "../../classes/map-builder.ts";
+import { Objective } from "../game-objects/objective.ts";
+import { getRandomArrayEntry, shuffleArray } from "../../lib/array-helpers.ts";
+import { EventTargetBase } from "../../lib/event-target.decorator.ts";
 
 export class LevelTemplate extends EventTargetBase implements Level {
-    player: Player;
+    private currentLevelConfig!: LevelConfig;
+    player1: Player;
+    player2: Player;
     objectives: LevelPickup[] = [];
     enemies: Enemy[] = [];
     canvasManager = CanvasManager.getInstance();
@@ -18,17 +20,18 @@ export class LevelTemplate extends EventTargetBase implements Level {
     layers: LevelLayer[] = [];
     collisionMask: number[][] = [];
     state: LevelState = 'pause';
-    score = 0;
+    scorePlayer1 = 0;
+    scorePlayer2 = 0;
     maxElementsToSpawn = 1;
+    playerMode: Level["playerMode"] = "mp";
 
-    onCompleteCallback?: () => void;
-    onFailedCallback?: () => void;
-
-    constructor(player: Player) {
+    constructor(player1: Player, player2: Player) {
         super();
-        this.player = player;
-        player.setTilePosition(1, 1);
-        player.addEventListener('player:collided', this.onPlayerCollision.bind(this));
+        this.player1 = player1;
+        this.player2 = player2;
+        player1.stopMove();
+        player2.stopMove();
+        this.setupListeners();
     }
 
     get possibleSpawnLocations(): LevelMapPosition[] {
@@ -44,20 +47,28 @@ export class LevelTemplate extends EventTargetBase implements Level {
         return spawnLocations;
     }
 
-    init(data: JsonLevelData) {
-        this.layers = importLevelFromJson(data);
+    init(levelConfig: LevelConfig) {
+        this.currentLevelConfig = levelConfig;
+        this.layers = importLevelFromJson(levelConfig.jsonData);
         this.collisionMask = this.layers.find(layer => layer.name === 'collide')!.matrix;
         (this.objectives || []).forEach(objective => {
             this.setCollisionMask(objective.node.tileX, objective.node.tileY, CollisionMask.ITEM);
         })
-        // Input.onKeyPress('e', this.onPickup.bind(this));
+        this.enemies = levelConfig.enemies.map(enemy => new Enemy(enemy.position.x, enemy.position.y, enemy.path));
+
+        this.player1.stopMove(levelConfig.player1Position.direction);
+        this.player2.stopMove(levelConfig.player2Position.direction);
+
+        this.player1.setTilePosition(levelConfig.player1Position.x, levelConfig.player1Position.y)
+        this.player1.tilesPerSecond = PLAYER_SPEED;
+        this.player2.setTilePosition(levelConfig.player2Position.x, levelConfig.player2Position.y)
+        this.player2.tilesPerSecond = PLAYER_SPEED;
     }
 
     draw(): void {
         this.checkAndCreateObjectives();
         const ctx = this.canvasManager.ctx; // Replace with your actual canvas context
         ctx.save();
-        // ctx.translate(-camera.cameraX * TILE_SIZE, -camera.cameraY * TILE_SIZE);
 
         // Draw all tiles
         this.layers
@@ -86,15 +97,12 @@ export class LevelTemplate extends EventTargetBase implements Level {
             enemy.draw();
         });
 
-        // Draw the player
-        this.player.update();
-        this.player.draw();
-
-        if(this.score > 0 && this.score % 3 === 0) {
-            this.player.tilesPerSecond = PLAYER_SPEED * 1.5;
-        } else {
-            this.player.tilesPerSecond = PLAYER_SPEED;
-        }
+        // Draw player 1
+        this.player1.update();
+        this.player1.draw();
+        // draw player 2
+        this.player2.update();
+        this.player2.draw();
 
         this.layers.at(-1)!.matrix.forEach((row, rowIndex) => {
             row.forEach((spriteIndex, colIndex) => {
@@ -105,13 +113,14 @@ export class LevelTemplate extends EventTargetBase implements Level {
         })
 
         if (this.state === 'play') {
-            this.player.move(this.player.direction, this.collisionMask);
+            this.player1.move(this.player1.direction, this.collisionMask);
+            this.player2.move(this.player2.direction, this.collisionMask);
         }
 
         // Restore the canvas to its original state
         ctx.restore();
 
-        this.checkFailedState();
+        this.checkEnemyCollision();
     }
 
 
@@ -119,58 +128,25 @@ export class LevelTemplate extends EventTargetBase implements Level {
         this.onCompleteCallback && this.onCompleteCallback();
     }
 
-    // onPickup() {
-    //     const availableObjective = this.getAvailableObjective();
-    //     if (availableObjective) {
-    //         this.setCollisionMask(availableObjective.node.tileX, availableObjective.node.tileY, CollisionMask.FLOOR)
-    //         this.checkCompleteState();
-    //     }
-    // }
-
-    // getAvailableObjective() {
-    //     const playerDirection = this.player.direction;
-    //     const positionToCheck = [this.player.tileX, this.player.tileY];
-    //
-    //     if (playerDirection === 'up') {
-    //         positionToCheck[1] -= 1;
-    //     }
-    //
-    //     if (playerDirection === 'down') {
-    //         positionToCheck[1] += 1;
-    //     }
-    //
-    //     if (playerDirection === 'left') {
-    //         positionToCheck[0] -= 1;
-    //     }
-    //
-    //     if (playerDirection === 'right') {
-    //         positionToCheck[0] += 1;
-    //     }
-    //
-    //     return this.objectives.find(objective => {
-    //         return objective.node.tileX === positionToCheck[0] && objective.node.tileY === positionToCheck[1]
-    //     });
-    // }
-
     setCollisionMask(tileX: number, tileY: number, collisionMask: CollisionMask) {
         this.collisionMask[tileY][tileX] = collisionMask;
     }
 
-    // checkCompleteState() {
-    //     const objectives = this.objectives;
-    //
-    //     if (objectives.every(objective => objective.acquired)) {
-    //         this.onComplete();
-    //     }
-    // }
+    checkEnemyCollision() {
+        if (this.enemies.some(enemy => enemy.checkCollision(this.player1))) {
+            this.onPlayer1Collision(new CustomEvent<PlayerCollidedEvent>('player:collided', {detail: {collisionMask: CollisionMask.ENEMY}}))
+        }
 
-    checkFailedState() {
-        if (this.enemies.some(enemy => enemy.checkCollision(this.player))) {
-            this.onFailedCallback && this.onFailedCallback();
+        if (this.enemies.some(enemy => enemy.checkCollision(this.player2))) {
+            this.onPlayer2Collision(new CustomEvent<PlayerCollidedEvent>('player:collided', {detail: {collisionMask: CollisionMask.ENEMY}}))
         }
     }
 
-    toggleState() {
+    toggleState(state?: LevelState) {
+        if (state) {
+            return this.state = state;
+        }
+
         if (this.state === 'pause' || this.state === 'fail') {
             return this.state = 'play';
         }
@@ -196,22 +172,89 @@ export class LevelTemplate extends EventTargetBase implements Level {
         }
     }
 
-    onPlayerCollision(event: CustomEvent<PlayerCollidedEvent>) {
+    onPlayer1Collision(event: CustomEvent<PlayerCollidedEvent>) {
         const collisionMask = event.detail.collisionMask;
 
         if (collisionMask === CollisionMask.ITEM) {
-            this.score++;
+            this.scorePlayer1++;
             const objective = this.objectives[0]!;
-            console.log(this.objectives)
             this.setCollisionMask(objective.node.tileX, objective.node.tileY, CollisionMask.FLOOR);
             this.objectives.pop();
 
-            this.dispatchEvent(new Event('level:score_update'));
+            if (this.scorePlayer1 > 0 && this.scorePlayer1 % 3 === 0) {
+                this.player1.tilesPerSecond = PLAYER_SPEED * 1.5;
+            } else {
+                this.player1.tilesPerSecond = PLAYER_SPEED;
+            }
+        }
+
+        if (collisionMask > CollisionMask.FLOOR) {
+            if (this.scorePlayer1 >= 1) {
+                this.scorePlayer1--;
+            }
+
+            const levelConfig = this.currentLevelConfig;
+            this.player1.updateDirection(this.currentLevelConfig.player1Position.direction);
+            this.player1.setTilePosition(levelConfig.player1Position.x, levelConfig.player1Position.y)
+
+            if(this.player1.tilesPerSecond > PLAYER_SPEED) {
+                this.player1.tilesPerSecond = PLAYER_SPEED;
+            }
+
+            if(this.player1.tilesPerSecond > PLAYER_SPEED / 2) {
+                this.player1.tilesPerSecond = PLAYER_SPEED / 2;
+                setTimeout(() => {
+                    if (this.player1.tilesPerSecond < PLAYER_SPEED) {
+                        this.player1.tilesPerSecond = PLAYER_SPEED;
+                    }
+                }, 1200)
+            }
         }
     }
 
-    destroy() {
-        this.player.removeEventListener('player:collided', this.onPlayerCollision);
-        console.log("destroy!", this.player)
+    onPlayer2Collision(event: CustomEvent<PlayerCollidedEvent>) {
+        const collisionMask = event.detail.collisionMask;
+
+        if (collisionMask === CollisionMask.ITEM) {
+            this.scorePlayer2++;
+
+            const objective = this.objectives[0]!;
+            this.setCollisionMask(objective.node.tileX, objective.node.tileY, CollisionMask.FLOOR);
+            this.objectives.pop();
+
+            if (this.scorePlayer2 > 0 && this.scorePlayer2 % 3 === 0) {
+                this.player2.tilesPerSecond = PLAYER_SPEED * 1.5;
+            } else {
+                this.player2.tilesPerSecond = PLAYER_SPEED;
+            }
+        }
+
+        if (collisionMask > CollisionMask.FLOOR) {
+            if (this.scorePlayer2 >= 1) {
+                this.scorePlayer2--;
+            }
+
+            const levelConfig = this.currentLevelConfig;
+            this.player2.updateDirection(this.currentLevelConfig.player1Position.direction);
+            this.player2.setTilePosition(levelConfig.player2Position.x, levelConfig.player2Position.y)
+
+            if(this.player2.tilesPerSecond > PLAYER_SPEED) {
+                this.player2.tilesPerSecond = PLAYER_SPEED;
+            }
+
+            if(this.player2.tilesPerSecond > PLAYER_SPEED / 2) {
+                this.player2.tilesPerSecond = PLAYER_SPEED / 2;
+                setTimeout(() => {
+                    if (this.player2.tilesPerSecond < PLAYER_SPEED) {
+                        this.player2.tilesPerSecond = PLAYER_SPEED;
+                    }
+                }, 1200)
+            }
+        }
+    }
+
+    private setupListeners() {
+        this.player1.addEventListener('player:collided', this.onPlayer1Collision.bind(this));
+        this.player2.addEventListener('player:collided', this.onPlayer2Collision.bind(this));
     }
 }

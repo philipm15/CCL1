@@ -5,6 +5,7 @@ export const CAMERA_TILES = 8;
 export const PLAYER_SPEED = 4.5;
 
 export enum CollisionMask {
+    ENEMY = 1,
     FLOOR = 0,
     ITEM = -1,
 }

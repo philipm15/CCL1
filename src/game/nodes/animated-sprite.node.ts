@@ -1,4 +1,4 @@
-import {extractFramesFromSpritesheet} from "../lib/sprite.ts";
+import { extractFramesFromSpritesheet } from "../lib/sprite.ts";
 
 export type AnimatedSpriteConfig = {
     spriteSheetPath: string;
@@ -17,11 +17,19 @@ export type AnimationConfig = {
 export type Animation = AnimationConfig & { frames: HTMLCanvasElement[] };
 
 export class AnimatedSpriteNode {
+    config!: AnimatedSpriteConfig;
     currentAnimation: Animation | undefined;
     frames: HTMLCanvasElement[][] = [];
     animations: Record<string, Animation> = {};
 
-    constructor(private config: AnimatedSpriteConfig) {
+    constructor(animatedSpriteConfig: AnimatedSpriteConfig) {
+        this.config = animatedSpriteConfig;
+    }
+
+    init() {
+        const config = this.config;
+
+        if (!config) return;
         const spriteSheet = new Image();
         spriteSheet.src = config.spriteSheetPath;
         spriteSheet.onload = () => {

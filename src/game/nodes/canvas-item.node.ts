@@ -32,9 +32,9 @@ export class CanvasItemNode {
     /**
      * Called when the node should update its state
      * @abstract
-     * @param deltaTime {number}
+     * @return void
      */
-    update(deltaTime?: number) {
+    update() {
     }
 
     checkCollision(node: CanvasItemNode): boolean {

@@ -1,12 +1,9 @@
 import { CanvasManager } from "./classes/canvas-manager.ts";
 import { Level_1 } from "./scenes/levels/level_1.ts";
-import {Player, PlayerCollidedEvent} from "./scenes/game-objects/player.ts";
+import { Player } from "./scenes/game-objects/player.ts";
 import { Input } from "./classes/input.ts";
-import { Level } from "./types/level.ts";
-import { Level_2 } from "./scenes/levels/level_2.ts";
-import { Camera } from "./classes/camera.ts";
 import { MapBuilder } from "./classes/map-builder.ts";
-import {CollisionMask} from "./lib/constants.ts";
+import { LevelTemplate } from "./scenes/levels/level_template.ts";
 
 export enum GameLevel {
     Level_1 = 1,
@@ -15,77 +12,41 @@ export enum GameLevel {
 
 export class Game {
     private canvasManager: CanvasManager;
-    private player = new Player(0, 0);
-    private selectedLevel: GameLevel | undefined;
-    private currentLevel: Level | undefined = undefined;
+    private player1 = new Player(0, 0);
+    private player2 = new Player(0, 0);
+    private level = new LevelTemplate(this.player1, this.player2);
     private input = new Input();
-    private camera = new Camera();
     private mapBuilder = new MapBuilder();
     animationFrameId: number | undefined;
 
     constructor() {
         this.canvasManager = CanvasManager.getInstance();
         this.mapBuilder.loadImages().then(() => {
-            // this.input.addOnKeyUpCallback((key) => {
-            //     if (['w', 'a', 's', 'd'].includes(key)) {
-            //         this.player.stopMove();
-            //     }
-            // });
-
             this.setLevel(GameLevel.Level_1);
-
-            // this.player.addEventListener('player:update', () => {
-            //     this.camera.updateCamera(this.player.tileX, this.player.tileY);
-            // })
-
-            this.player.addEventListener('player:collided', (event: CustomEvent<PlayerCollidedEvent>) => {
-                if(event.detail.collisionMask > CollisionMask.FLOOR) {
-                    this.setLevel(this.selectedLevel!);
-                }
-            })
+            this.gameLoop();
 
             Input.onKeyPress(' ', (_, event) => {
                 event.preventDefault();
-                this.currentLevel?.toggleState();
+                this.level.toggleState();
             });
         });
-        // this.canvasManager.ctx.scale(2, 2);
-
     }
 
     setLevel(level: GameLevel) {
-        this.cancelCurrentLevel();
-        this.selectedLevel = level;
-
         if (level === GameLevel.Level_1) {
-            this.currentLevel = new Level_1(this.player);
-        }
-
-        if (level === GameLevel.Level_2) {
-            this.currentLevel = new Level_2(this.player);
-        }
-
-        if (this.currentLevel) {
-            this.gameLoop();
-            this.currentLevel.onCompleteCallback = () => {
-                console.log("complete")
-            }
-
-            this.currentLevel.onFailedCallback = () => {
-                console.log("failed")
-                this.setLevel(this.selectedLevel!);
-            }
+            this.level.toggleState("pause");
+            this.level.init(Level_1);
         }
     }
 
     private gameLoop() {
-        if (!this.currentLevel) return;
+        if (!this.level || !this.canvasManager.ctx) return;
 
         const ctx = this.canvasManager.ctx;
         ctx.clearRect(0, 0, this.canvasManager.canvas.width, this.canvasManager.canvas.height);
 
         this.handleInput();
-        this.currentLevel.draw(this.camera);
+        this.level.draw();
 
         this.handleScoreUpdate();
 
@@ -93,54 +54,31 @@ export class Game {
     }
 
     private handleInput() {
-        if (!this.currentLevel || this.currentLevel?.state !== 'play') return;
+        if (!this.level || this.level?.state !== 'play') return;
 
-        if (this.input.isKeyPressed('w')) this.player.updateDirection('up');
-        if (this.input.isKeyPressed('s')) this.player.updateDirection('down');
-        if (this.input.isKeyPressed('a')) this.player.updateDirection('left');
-        if (this.input.isKeyPressed('d')) this.player.updateDirection('right');
-    }
+        if (this.input.isKeyPressed('w')) this.player1.updateDirection('up');
+        if (this.input.isKeyPressed('s')) this.player1.updateDirection('down');
+        if (this.input.isKeyPressed('a')) this.player1.updateDirection('left');
+        if (this.input.isKeyPressed('d')) this.player1.updateDirection('right');
 
-    // private drawCurrentObjectives() {
-    //     const objectives = this.currentLevel?.objectives ?? [];
-    //     const gameObjectivesDiv = this.canvasManager.objectivesDiv;
-    //     gameObjectivesDiv.replaceChildren();
-    //     objectives.forEach((objective) => {
-    //         const image = objective.node.staticSpriteNode.sprite;
-    //
-    //         if (image) {
-    //             const div = document.createElement("div");
-    //             div.classList.add("game-objective-entry");
-    //
-    //             const span = div.appendChild(document.createElement("span"));
-    //             span.innerHTML = objective.item.name;
-    //
-    //             if (objective.acquired) {
-    //                 span.classList.add("line-through");
-    //             }
-    //
-    //             div.appendChild(image);
-    //
-    //             gameObjectivesDiv.appendChild(div);
-    //         }
-    //     })
-    // }
-
-    private cancelCurrentLevel() {
-        if (this.animationFrameId !== undefined) {
-            window.cancelAnimationFrame(this.animationFrameId);
-        }
-
-        if(this.currentLevel) {
-            this.currentLevel.destroy();
-        }
+        if (this.input.isKeyPressed('ArrowUp')) this.player2.updateDirection('up');
+        if (this.input.isKeyPressed('ArrowDown')) this.player2.updateDirection('down');
+        if (this.input.isKeyPressed('ArrowLeft')) this.player2.updateDirection('left');
+        if (this.input.isKeyPressed('ArrowRight')) this.player2.updateDirection('right');
     }
 
     private handleScoreUpdate() {
-        const scoreText = this.canvasManager.scoreText;
-        const score = +((scoreText.innerText.split(':') || ['0']).at(-1)?.trim() ?? 0);
-        if(this.currentLevel?.score !== score) {
-            scoreText.innerText = `SCORE: ${this.currentLevel?.score ?? 0}`;
+        const scoreText1 = this.canvasManager.scoreText1;
+        const scoreText2 = this.canvasManager.scoreText2;
+
+        const score1 = +((scoreText1.innerText.split(':') || ['0']).at(-1)?.trim() ?? 0);
+        if (this.level.scorePlayer1 !== score1) {
+            scoreText1.innerText = `SCORE: ${ this.level.scorePlayer1 ?? 0 }`;
+        }
+
+        const score2 = +((scoreText2.innerText.split(':') || ['0']).at(-1)?.trim() ?? 0);
+        if (this.level.scorePlayer2 !== score2) {
+            scoreText2.innerText = `SCORE: ${ this.level.scorePlayer2 ?? 0 }`;
         }
     }
 }
