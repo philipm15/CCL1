@@ -42,24 +42,10 @@ button {
     box-sizing: border-box;
 }
 
-#gameObjectives {
-    width: 624px;
-    height: 120px;
-    border: 1px solid green;
-    padding: 8px;
-}
-
-.game-objective-entry {
-    display: flex;
-    flex-direction: column;
-
-    img {
-        width: 32px;
-    }
-}
-
-.line-through {
-    text-decoration: line-through;
+#audioToggle {
+    position: absolute;
+    top: 16px;
+    left: 16px;
 }
 
 .screen-container {
