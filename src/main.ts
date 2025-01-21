@@ -6,8 +6,8 @@ document.querySelector<HTMLDivElement>('#app')!.innerHTML = `
     <button id="audioToggle">Sound</button>
   
     <div class="screen-container">
-            <span id="scoreText1">SCORE: 0</span>
-            <span id="scoreText2">SCORE: 0</span>
+            <span id="scoreText1" hidden>SCORE: 0</span>
+            <span id="scoreText2" hidden>SCORE: 0</span>
             <div id="launchScreen" class="launch-screen">
                 <div class="game-screen">
                 </div>

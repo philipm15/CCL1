@@ -143,9 +143,10 @@ export class Player extends EventTargetMixin(CanvasItemNode) {
                 }));
             }
         } else {
+            const isOutOfBounds = newTileX >= MAP_SIZE || newTileY >= MAP_SIZE || newTileX < 0 || newTileY < 0;
             this.dispatchEvent(new CustomEvent<PlayerCollidedEvent>('player:collided', {
                 detail: {
-                    collisionMask: collisionMask[newTileY][newTileX],
+                    collisionMask: isOutOfBounds ? 1 : collisionMask[newTileY][newTileX],
                 }
             }));
         }

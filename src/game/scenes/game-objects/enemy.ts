@@ -31,10 +31,11 @@ export class Enemy extends CanvasItemNode {
     private targetY: number = 0;
     private reverse: boolean = false;
 
-    constructor(tileX: number, tileY: number, path: { x: number; y: number }[], tilesPerSecond?: number) {
+    constructor(tileX: number, tileY: number, path: { x: number; y: number }[], spriteSheetPath: string = 'src/assets/spritesheets/enemy_1.png', tilesPerSecond?: number) {
         super(tileX * TILE_SIZE, tileY * TILE_SIZE, tileX, tileY);
         this.path = path;
         this.tilesPerSecond = tilesPerSecond ?? this.tilesPerSecond;
+        this.animatedSpriteNode.config.spriteSheetPath = spriteSheetPath;
         this.animatedSpriteNode.init();
 
         if (path && path.length > 0) {

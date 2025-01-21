@@ -34,6 +34,10 @@ export class Game {
         });
 
         this.level.playerMode = this.playerMode;
+        this.canvasManager.scoreText1.hidden = false;
+        if(this.playerMode === 'mp') {
+            this.canvasManager.scoreText2.hidden = false;
+        }
     }
 
     setLevel(level: GameLevel) {
