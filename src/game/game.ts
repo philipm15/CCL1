@@ -4,6 +4,7 @@ import { Player } from "./scenes/game-objects/player.ts";
 import { Input } from "./classes/input.ts";
 import { MapBuilder } from "./classes/map-builder.ts";
 import { LevelTemplate } from "./scenes/levels/level_template.ts";
+import { Level } from "./types/level.ts";
 
 export enum GameLevel {
     Level_1 = 1,
@@ -18,6 +19,7 @@ export class Game {
     private input = new Input();
     private mapBuilder = new MapBuilder();
     animationFrameId: number | undefined;
+    playerMode: Level["playerMode"] = 'mp';
 
     constructor() {
         this.canvasManager = CanvasManager.getInstance();
@@ -30,6 +32,8 @@ export class Game {
                 this.level.toggleState();
             });
         });
+
+        this.level.playerMode = this.playerMode;
     }
 
     setLevel(level: GameLevel) {

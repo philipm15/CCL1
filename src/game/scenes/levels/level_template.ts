@@ -101,8 +101,10 @@ export class LevelTemplate extends EventTargetBase implements Level {
         this.player1.update();
         this.player1.draw();
         // draw player 2
-        this.player2.update();
-        this.player2.draw();
+        if(this.playerMode === 'mp') {
+            this.player2.update();
+            this.player2.draw();
+        }
 
         this.layers.at(-1)!.matrix.forEach((row, rowIndex) => {
             row.forEach((spriteIndex, colIndex) => {
@@ -114,7 +116,10 @@ export class LevelTemplate extends EventTargetBase implements Level {
 
         if (this.state === 'play') {
             this.player1.move(this.player1.direction, this.collisionMask);
-            this.player2.move(this.player2.direction, this.collisionMask);
+
+            if(this.playerMode === 'mp') {
+                this.player2.move(this.player2.direction, this.collisionMask);
+            }
         }
 
         // Restore the canvas to its original state
