@@ -57,3 +57,5 @@
   - Players are being place to the starting position after colliding
 - Improved level 1 map, fixed rendering issues (id mismatch)
 - Add background music
+- Add second enemy to level 1 and extends constructor
+- Add outOfBounds collision error
