@@ -77,3 +77,5 @@
 - Improve UI (add controls)
 - Add reset function
 - Add new player spritesheets
+- Add new objective sprites
+- Add options screen
