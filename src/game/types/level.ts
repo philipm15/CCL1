@@ -62,6 +62,6 @@ export type LevelConfig = {
     jsonData: JsonLevelData;
     player1Position: LevelMapPosition & { direction: CanvasItemNode["direction"] };
     player2Position: LevelMapPosition & { direction: CanvasItemNode["direction"] };
-    enemies: { position: LevelMapPosition, path: LevelMapPosition[] }[];
+    enemies: { position: LevelMapPosition, path: LevelMapPosition[], tilesPerSecond?: number }[];
     maxElementsToSpawn?: number;
 }

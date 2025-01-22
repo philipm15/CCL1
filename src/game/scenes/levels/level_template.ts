@@ -61,7 +61,7 @@ export class LevelTemplate extends EventTargetBase implements Level {
         (this.objectives || []).forEach(objective => {
             this.setCollisionMask(objective.node.tileX, objective.node.tileY, CollisionMask.ITEM);
         })
-        this.enemies = levelConfig.enemies.map(enemy => new Enemy(enemy.position.x, enemy.position.y, enemy.path));
+        this.enemies = levelConfig.enemies.map(enemy => new Enemy(enemy.position.x, enemy.position.y, enemy.path, enemy.tilesPerSecond ?? 2));
 
         this.player1.setTilePosition(levelConfig.player1Position.x, levelConfig.player1Position.y)
         this.player1.tilesPerSecond = PLAYER_SPEED;

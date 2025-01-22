@@ -8,7 +8,7 @@ export class Enemy extends CanvasItemNode {
         spriteSheetPath: 'src/assets/spritesheets/enemy_1.png',
         rows: 4,
         cols: 4,
-        defaultAnimation: 'walk_right',
+        defaultAnimation: 'idle_right',
         tileSize: TILE_SIZE * 2,
         animations: {
             'idle_down': {
@@ -59,12 +59,14 @@ export class Enemy extends CanvasItemNode {
     constructor(tileX: number, tileY: number, path: {
         x: number;
         y: number
-    }[], spriteSheetPath: string = 'src/assets/spritesheets/enemy_1.png', tilesPerSecond?: number) {
+    }[], tilesPerSecond?: number, spriteSheetPath: string = 'src/assets/spritesheets/enemy_1.png') {
         super(tileX * TILE_SIZE, tileY * TILE_SIZE, tileX, tileY);
         this.path = path;
         this.tilesPerSecond = tilesPerSecond ?? this.tilesPerSecond;
         this.animatedSpriteNode.config.spriteSheetPath = spriteSheetPath;
         this.animatedSpriteNode.init();
+        this.direction = this.getDirectionToTile(path[0]);
+        this.animatedSpriteNode.playAnimation(`idle_${this.direction}`);
 
         if (path && path.length > 0) {
             this.startNextMove();
@@ -131,7 +133,7 @@ export class Enemy extends CanvasItemNode {
         this.moving = true;
     }
 
-    getDirectionToTile(nextTile: { x: number; y: number }): string {
+    getDirectionToTile(nextTile: { x: number; y: number }): CanvasItemNode["direction"] {
         if (nextTile.x > this.tileX) return "right";
         if (nextTile.x < this.tileX) return "left";
         if (nextTile.y > this.tileY) return "down";

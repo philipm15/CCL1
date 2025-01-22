@@ -11,8 +11,13 @@ export const Level_1: LevelConfig = {
             path: [{x: 2, y: 3}, {x: 3, y: 3}, {x: 4, y: 3}, {x: 5, y: 3}, {x: 6, y: 3}, {x: 7, y: 3}]
         },
         {
-            position: {x: 7, y: 9},
-            path: [{x: 7, y: 9}, {x: 8, y: 9}, {x: 9, y: 9}, {x: 10, y: 9}, {x: 11, y: 9}, {x: 12, y: 9}]
+            position: {x: 8, y: 9},
+            path: [{x: 8, y: 9}, {x: 8, y: 8}, {x: 8, y: 7}, {x: 8, y: 6}],
+            tilesPerSecond: 3
+        },
+        {
+            position: {x: 18, y: 14},
+            path: [{x: 18, y: 14}, {x: 17, y: 14}, {x: 16, y: 14}]
         }
     ]
 }

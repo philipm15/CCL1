@@ -6,6 +6,10 @@ export class UIManager {
     public scoreText1: HTMLSpanElement;
     public scoreText2: HTMLSpanElement;
     public timeText: HTMLSpanElement;
+    public gameOptions: HTMLDivElement;
+    public gameCanvasContainer: HTMLDivElement;
+    public playerModeToggle: HTMLInputElement;
+    public saveOptionsBtn: HTMLButtonElement;
 
     private constructor() {
         this.canvas = document.getElementById('gameCanvas') as HTMLCanvasElement;
@@ -14,6 +18,10 @@ export class UIManager {
         this.scoreText1 = document.getElementById('scoreText1') as HTMLSpanElement;
         this.scoreText2 = document.getElementById('scoreText2') as HTMLSpanElement;
         this.timeText = document.getElementById('timeText') as HTMLSpanElement;
+        this.gameOptions = document.getElementById('gameOptions') as HTMLDivElement;
+        this.gameCanvasContainer = document.getElementsByClassName('game-canvas-container')[0]! as HTMLDivElement;
+        this.playerModeToggle = document.getElementById('playerMode') as HTMLInputElement;
+        this.saveOptionsBtn = document.getElementById('saveOptionsBtn') as HTMLButtonElement;
     }
 
     static getInstance(): UIManager {

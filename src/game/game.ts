@@ -20,28 +20,37 @@ export class Game {
     private mapBuilder = new MapBuilder();
     animationFrameId: number | undefined;
     playerMode: Level["playerMode"] = 'mp';
+    firstBootUp = true;
 
     constructor() {
         this.canvasManager = UIManager.getInstance();
-        this.mapBuilder.loadImages().then(() => {
-            this.setLevel(GameLevel.Level_1);
-            this.gameLoop();
+        this.canvasManager.saveOptionsBtn.addEventListener('click', () => {
+            this.playerMode = this.canvasManager.playerModeToggle.checked ? 'mp' : 'sp';
+            this.canvasManager.gameOptions.style.display = 'none';
+            if (this.firstBootUp) {
+                this.firstBootUp = false;
+                this.mapBuilder.loadImages().then(() => {
+                    this.canvasManager.canvas.hidden = false;
+                    this.setLevel(GameLevel.Level_1);
+                    this.gameLoop();
 
-            Input.onKeyPress(' ', () => {
-                this.level.toggleState();
-            });
+                    Input.onKeyPress(' ', () => {
+                        this.level.toggleState();
+                    });
 
-            Input.onKeyPress('r', () => {
-                this.level.reset();
-            })
-        });
+                    Input.onKeyPress('r', () => {
+                        this.level.reset();
+                    })
+                });
 
-        this.level.playerMode = this.playerMode;
-        this.canvasManager.scoreText1.hidden = false;
-        this.canvasManager.timeText.hidden = false;
-        if (this.playerMode === 'mp') {
-            this.canvasManager.scoreText2.hidden = false;
-        }
+                this.level.playerMode = this.playerMode;
+                this.canvasManager.scoreText1.hidden = false;
+                this.canvasManager.timeText.hidden = false;
+                if (this.playerMode === 'mp') {
+                    this.canvasManager.scoreText2.hidden = false;
+                }
+            }
+        })
     }
 
     setLevel(level: GameLevel) {

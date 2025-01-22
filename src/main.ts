@@ -24,7 +24,16 @@ document.querySelector<HTMLDivElement>('#app')!.innerHTML = `
                 <span class="launch-screen-text">PRESS SPACE TO START</span>
             </div>
             <div class="game-canvas-container" style="display: none">
-                <canvas id="gameCanvas" height="640" width="640"></canvas>
+                <div id="gameOptions">
+                    <div class="pixel-toggle">
+                      <span class="label left">Singleplayer</span>
+                      <input id="playerMode" type="checkbox" />
+                      <label for="playerMode"></label>
+                      <span class="label right">Multiplayer</span>
+                </div>
+                <button id="saveOptionsBtn">PLAY!</button>
+</div>
+                <canvas id="gameCanvas" height="640" width="640" hidden></canvas>
             </div>
     </div>
 </div>
@@ -45,9 +54,8 @@ audioToggle.addEventListener('click', () => {
 });
 
 
-let game: Game | undefined = undefined;
 const launchScreen = document.getElementById('launchScreen')! as HTMLDivElement;
-const gameCanvas = document.getElementsByClassName('game-canvas-container')[0]! as HTMLCanvasElement;
+const gameCanvas = document.getElementsByClassName('game-canvas-container')[0]! as HTMLDivElement;
 
 document.addEventListener('keydown', handleSpacePress);
 
@@ -57,7 +65,7 @@ function handleSpacePress(event: KeyboardEvent) {
         gameCanvas.style.display = 'block';
         void backgroundMusic.play();
         document.removeEventListener('keydown', handleSpacePress); // Remove the listener
-        game = new Game();
+        new Game();
     }
 }
 
