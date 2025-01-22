@@ -1,4 +1,5 @@
 import { extractFramesFromSpritesheet } from "../lib/sprite.ts";
+import { TILE_SIZE } from "../lib/constants.ts";
 
 export type AnimatedSpriteConfig = {
     spriteSheetPath: string;
@@ -6,6 +7,7 @@ export type AnimatedSpriteConfig = {
     cols: number;
     animations: Record<string, AnimationConfig>;
     defaultAnimation: keyof AnimatedSpriteConfig['animations'];
+    tileSize?: number;
 }
 
 export type AnimationConfig = {
@@ -33,7 +35,7 @@ export class AnimatedSpriteNode {
         const spriteSheet = new Image();
         spriteSheet.src = config.spriteSheetPath;
         spriteSheet.onload = () => {
-            this.frames = extractFramesFromSpritesheet(spriteSheet, config.rows, config.cols);
+            this.frames = extractFramesFromSpritesheet(spriteSheet, config.rows, config.cols, config.tileSize ?? TILE_SIZE, config.tileSize ?? TILE_SIZE);
             this.setupAnimations();
         }
     }

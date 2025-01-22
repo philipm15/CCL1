@@ -11,40 +11,41 @@ export class Player extends EventTargetMixin(CanvasItemNode) {
     tilesPerSecond = PLAYER_SPEED;
     private animatedSpriteNode = new AnimatedSpriteNode({
         spriteSheetPath: 'src/assets/spritesheets/player.png',
-        rows: 13,
+        rows: 4,
         cols: 4,
         defaultAnimation: 'idle_down',
+        tileSize: TILE_SIZE * 2,
         animations: {
             'idle_down': {
                 row: 0,
-                numberOfSprites: 4,
+                numberOfSprites: 1,
             },
             'idle_right': {
                 row: 1,
-                numberOfSprites: 4,
+                numberOfSprites: 1,
             },
             'idle_left': {
                 row: 2,
-                numberOfSprites: 4,
+                numberOfSprites: 1,
             },
             'idle_up': {
                 row: 3,
-                numberOfSprites: 4,
+                numberOfSprites: 1,
             },
             'walk_down': {
-                row: 5,
+                row: 0,
                 numberOfSprites: 4,
             },
             'walk_left': {
-                row: 7,
+                row: 1,
                 numberOfSprites: 4,
             },
             'walk_right': {
-                row: 9,
+                row: 2,
                 numberOfSprites: 4,
             },
             'walk_up': {
-                row: 11,
+                row: 3,
                 numberOfSprites: 4,
             }
         }
@@ -57,7 +58,7 @@ export class Player extends EventTargetMixin(CanvasItemNode) {
     private targetX: number = 0;
     private targetY: number = 0;
 
-    constructor(tileX: number, tileY: number, spriteSheetPath: string = 'src/assets/spritesheets/player.png') {
+    constructor(tileX: number, tileY: number, spriteSheetPath: string = 'src/assets/spritesheets/player_red.png') {
         super(tileX * TILE_SIZE, tileY * TILE_SIZE, tileX, tileY);
         this.animatedSpriteNode.config.spriteSheetPath = spriteSheetPath;
         this.animatedSpriteNode.init();

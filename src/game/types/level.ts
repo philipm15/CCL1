@@ -33,6 +33,8 @@ export interface Level {
     onComplete(): void;
 
     toggleState(): void;
+
+    reset(): void;
 }
 
 export type LevelState = Level["state"];
@@ -52,4 +54,5 @@ export type LevelConfig = {
     player1Position: LevelMapPosition & { direction: CanvasItemNode["direction"] };
     player2Position: LevelMapPosition & { direction: CanvasItemNode["direction"] };
     enemies: { position: LevelMapPosition, path: LevelMapPosition[] }[];
+    maxElementsToSpawn?: number;
 }

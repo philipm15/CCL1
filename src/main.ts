@@ -5,6 +5,13 @@ document.querySelector<HTMLDivElement>('#app')!.innerHTML = `
   <div class="app">
     <button id="audioToggle">Sound</button>
   
+    <div class="controls">
+        <span>PLAYER 1: WASD</span>
+        <span>PLAYER 2: ARROW KEYS</span>
+        <span>PAUSE: SPACE</span>
+        <span>RESET: R</span>
+</div>
+  
     <div class="screen-container">
             <span id="scoreText1" hidden>SCORE: 0</span>
             <span id="scoreText2" hidden>SCORE: 0</span>

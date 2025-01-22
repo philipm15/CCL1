@@ -14,7 +14,7 @@ export enum GameLevel {
 export class Game {
     private canvasManager: CanvasManager;
     private player1 = new Player(0, 0);
-    private player2 = new Player(0, 0);
+    private player2 = new Player(0, 0, 'src/assets/spritesheets/player_blue.png');
     private level = new LevelTemplate(this.player1, this.player2);
     private input = new Input();
     private mapBuilder = new MapBuilder();
@@ -27,10 +27,13 @@ export class Game {
             this.setLevel(GameLevel.Level_1);
             this.gameLoop();
 
-            Input.onKeyPress(' ', (_, event) => {
-                event.preventDefault();
+            Input.onKeyPress(' ', () => {
                 this.level.toggleState();
             });
+
+            Input.onKeyPress('r', () => {
+                this.level.reset();
+            })
         });
 
         this.level.playerMode = this.playerMode;

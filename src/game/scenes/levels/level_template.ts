@@ -48,21 +48,34 @@ export class LevelTemplate extends EventTargetBase implements Level {
     }
 
     init(levelConfig: LevelConfig) {
+        this.state = 'pause';
         this.currentLevelConfig = levelConfig;
         this.layers = importLevelFromJson(levelConfig.jsonData);
         this.collisionMask = this.layers.find(layer => layer.name === 'collide')!.matrix;
+        this.objectives = [];
         (this.objectives || []).forEach(objective => {
             this.setCollisionMask(objective.node.tileX, objective.node.tileY, CollisionMask.ITEM);
         })
         this.enemies = levelConfig.enemies.map(enemy => new Enemy(enemy.position.x, enemy.position.y, enemy.path));
 
-        this.player1.stopMove(levelConfig.player1Position.direction);
-        this.player2.stopMove(levelConfig.player2Position.direction);
-
         this.player1.setTilePosition(levelConfig.player1Position.x, levelConfig.player1Position.y)
         this.player1.tilesPerSecond = PLAYER_SPEED;
         this.player2.setTilePosition(levelConfig.player2Position.x, levelConfig.player2Position.y)
         this.player2.tilesPerSecond = PLAYER_SPEED;
+
+        this.player1.stopMove(levelConfig.player1Position.direction);
+        this.player2.stopMove(levelConfig.player2Position.direction);
+
+        this.scorePlayer1 = 0;
+        this.scorePlayer2 = 0;
+
+        this.maxElementsToSpawn = levelConfig.maxElementsToSpawn ?? 1;
+    }
+
+    reset() {
+        if(this.currentLevelConfig) {
+            this.init(this.currentLevelConfig);
+        }
     }
 
     draw(): void {

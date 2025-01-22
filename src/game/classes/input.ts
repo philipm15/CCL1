@@ -8,6 +8,7 @@ export class Input {
             this.keys.add(e.key)
         });
         window.addEventListener('keyup', (e) => {
+            e.preventDefault();
             this.keys.delete(e.key);
         });
     }
