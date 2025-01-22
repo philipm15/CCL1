@@ -1,4 +1,4 @@
-import { MAP_SIZE } from "./constants.ts";
+import {MAP_SIZE} from "./constants.ts";
 
 export type JsonLevelData = {
     layers: Array<{

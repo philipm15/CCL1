@@ -13,8 +13,11 @@ document.querySelector<HTMLDivElement>('#app')!.innerHTML = `
 </div>
   
     <div class="screen-container">
+    <div class="game-info-container">
             <span id="scoreText1" hidden>SCORE: 0</span>
+            <span id="timeText" hidden></span>
             <span id="scoreText2" hidden>SCORE: 0</span>
+    </div>
             <div id="launchScreen" class="launch-screen">
                 <div class="game-screen">
                 </div>
@@ -29,10 +32,10 @@ document.querySelector<HTMLDivElement>('#app')!.innerHTML = `
 
 const audioToggle = document.getElementById('audioToggle')! as HTMLButtonElement;
 const backgroundMusic = new Audio('src/assets/sounds/bg.mp3');
-backgroundMusic.volume = 0.03;
+backgroundMusic.volume = 0 //0.03;
 
 audioToggle.addEventListener('click', () => {
-    if(backgroundMusic.paused) {
+    if (backgroundMusic.paused) {
         backgroundMusic.play().catch((error) => {
             console.error("Error starting music:", error);
         });

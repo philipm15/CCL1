@@ -66,17 +66,13 @@ button {
     background-color: #846662;
     position: relative;
 
-    #scoreText1, #scoreText2 {
+    .game-info-container {
         position: absolute;
         bottom: 0;
-    }
-
-    #scoreText1 {
+        width: 640px;
         left: 28px;
-    }
-
-    #scoreText2 {
-        right: 28px;
+        display: flex;
+        justify-content: space-between;
     }
 
     .launch-screen {

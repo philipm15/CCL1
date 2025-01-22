@@ -52,7 +52,7 @@ export function extractSpritesFromSpritesheet(
     tileHeight: number = TILE_SIZE
 ): Record<number, HTMLCanvasElement> {
     const spriteMap: Record<number, HTMLCanvasElement> = {};
-    if(!image.complete) {
+    if (!image.complete) {
         throw new Error("Failed to load sprites.");
     }
 

@@ -1,5 +1,5 @@
-import { CanvasManager } from "../classes/canvas-manager.ts";
-import { TILE_SIZE } from "../lib/constants.ts";
+import {UIManager} from "../classes/ui-manager.ts";
+import {TILE_SIZE} from "../lib/constants.ts";
 
 export class CanvasItemNode {
     tileSize = TILE_SIZE;
@@ -11,7 +11,7 @@ export class CanvasItemNode {
     x: number;
     // Canvas coordinate of Y
     y: number;
-    ctx = CanvasManager.getInstance().ctx;
+    ctx = UIManager.getInstance().ctx;
     direction: 'up' | 'down' | 'left' | 'right' = 'down';
 
     constructor(x: number, y: number, tileX: number, tileY: number) {

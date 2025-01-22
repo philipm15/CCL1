@@ -1,4 +1,4 @@
-import { extractSpritesFromSpritesheet } from "../lib/sprite.ts";
+import {extractSpritesFromSpritesheet} from "../lib/sprite.ts";
 
 export class MapBuilder {
     private static instance: MapBuilder;
@@ -11,7 +11,7 @@ export class MapBuilder {
                 const img = new Image();
                 img.src = src;
                 img.onload = () => resolve(img);
-                img.onerror = () => reject(new Error(`Failed to load image: ${ src }`));
+                img.onerror = () => reject(new Error(`Failed to load image: ${src}`));
             });
         };
 

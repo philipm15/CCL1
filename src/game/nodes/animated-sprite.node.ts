@@ -1,5 +1,5 @@
-import { extractFramesFromSpritesheet } from "../lib/sprite.ts";
-import { TILE_SIZE } from "../lib/constants.ts";
+import {extractFramesFromSpritesheet} from "../lib/sprite.ts";
+import {TILE_SIZE} from "../lib/constants.ts";
 
 export type AnimatedSpriteConfig = {
     spriteSheetPath: string;

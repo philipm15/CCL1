@@ -1,11 +1,11 @@
-import { loadSpriteByPath } from "../lib/sprite.ts";
+import {loadSpriteByPath} from "../lib/sprite.ts";
 
 export class StaticSpriteNode {
     spritePath: string | undefined;
     sprite: HTMLImageElement | undefined;
 
     constructor(spritePath?: string) {
-        if(spritePath) {
+        if (spritePath) {
             this.loadSprite(spritePath);
         }
     }

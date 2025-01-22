@@ -1,10 +1,10 @@
-import { CanvasManager } from "./classes/canvas-manager.ts";
-import { Level_1 } from "./scenes/levels/level_1.ts";
-import { Player } from "./scenes/game-objects/player.ts";
-import { Input } from "./classes/input.ts";
-import { MapBuilder } from "./classes/map-builder.ts";
-import { LevelTemplate } from "./scenes/levels/level_template.ts";
-import { Level } from "./types/level.ts";
+import {UIManager} from "./classes/ui-manager.ts";
+import {Level_1} from "./scenes/levels/level_1.ts";
+import {Player} from "./scenes/game-objects/player.ts";
+import {Input} from "./classes/input.ts";
+import {MapBuilder} from "./classes/map-builder.ts";
+import {LevelTemplate} from "./scenes/levels/level_template.ts";
+import {Level} from "./types/level.ts";
 
 export enum GameLevel {
     Level_1 = 1,
@@ -12,7 +12,7 @@ export enum GameLevel {
 }
 
 export class Game {
-    private canvasManager: CanvasManager;
+    private canvasManager: UIManager;
     private player1 = new Player(0, 0);
     private player2 = new Player(0, 0, 'src/assets/spritesheets/player_blue.png');
     private level = new LevelTemplate(this.player1, this.player2);
@@ -22,7 +22,7 @@ export class Game {
     playerMode: Level["playerMode"] = 'mp';
 
     constructor() {
-        this.canvasManager = CanvasManager.getInstance();
+        this.canvasManager = UIManager.getInstance();
         this.mapBuilder.loadImages().then(() => {
             this.setLevel(GameLevel.Level_1);
             this.gameLoop();
@@ -38,7 +38,8 @@ export class Game {
 
         this.level.playerMode = this.playerMode;
         this.canvasManager.scoreText1.hidden = false;
-        if(this.playerMode === 'mp') {
+        this.canvasManager.timeText.hidden = false;
+        if (this.playerMode === 'mp') {
             this.canvasManager.scoreText2.hidden = false;
         }
     }
@@ -59,8 +60,6 @@ export class Game {
         this.handleInput();
         this.level.draw();
 
-        this.handleScoreUpdate();
-
         this.animationFrameId = requestAnimationFrame(this.gameLoop.bind(this));
     }
 
@@ -78,18 +77,5 @@ export class Game {
         if (this.input.isKeyPressed('ArrowRight')) this.player2.updateDirection('right');
     }
 
-    private handleScoreUpdate() {
-        const scoreText1 = this.canvasManager.scoreText1;
-        const scoreText2 = this.canvasManager.scoreText2;
 
-        const score1 = +((scoreText1.innerText.split(':') || ['0']).at(-1)?.trim() ?? 0);
-        if (this.level.scorePlayer1 !== score1) {
-            scoreText1.innerText = `SCORE: ${ this.level.scorePlayer1 ?? 0 }`;
-        }
-
-        const score2 = +((scoreText2.innerText.split(':') || ['0']).at(-1)?.trim() ?? 0);
-        if (this.level.scorePlayer2 !== score2) {
-            scoreText2.innerText = `SCORE: ${ this.level.scorePlayer2 ?? 0 }`;
-        }
-    }
 }

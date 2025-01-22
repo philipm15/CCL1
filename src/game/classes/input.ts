@@ -19,7 +19,7 @@ export class Input {
 
     static onKeyPress(key: string, callback: (key: string, event: KeyboardEvent) => void) {
         return window.addEventListener('keydown', (e) => {
-            if(e.key === key) {
+            if (e.key === key) {
                 callback(e.key, e)
             }
         });

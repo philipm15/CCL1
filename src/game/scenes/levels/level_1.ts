@@ -1,5 +1,5 @@
 import Level_1_Json from '../../../assets/levels/level_1.json';
-import { LevelConfig } from "../../types/level.ts";
+import {LevelConfig} from "../../types/level.ts";
 
 export const Level_1: LevelConfig = {
     jsonData: Level_1_Json,

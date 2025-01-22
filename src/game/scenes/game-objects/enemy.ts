@@ -6,18 +6,43 @@ export class Enemy extends CanvasItemNode {
     private tilesPerSecond = 2; // Speed of the enemy
     private animatedSpriteNode = new AnimatedSpriteNode({
         spriteSheetPath: 'src/assets/spritesheets/enemy_1.png',
-        rows: 13,
+        rows: 4,
         cols: 4,
         defaultAnimation: 'walk_right',
+        tileSize: TILE_SIZE * 2,
         animations: {
-            'idle_down': { row: 0, numberOfSprites: 4 },
-            'idle_right': { row: 1, numberOfSprites: 4 },
-            'idle_left': { row: 2, numberOfSprites: 4 },
-            'idle_up': { row: 3, numberOfSprites: 4 },
-            'walk_down': { row: 5, numberOfSprites: 4 },
-            'walk_left': { row: 7, numberOfSprites: 4 },
-            'walk_right': { row: 9, numberOfSprites: 4 },
-            'walk_up': { row: 11, numberOfSprites: 4 },
+            'idle_down': {
+                row: 0,
+                numberOfSprites: 1,
+            },
+            'idle_right': {
+                row: 1,
+                numberOfSprites: 1,
+            },
+            'idle_left': {
+                row: 2,
+                numberOfSprites: 1,
+            },
+            'idle_up': {
+                row: 3,
+                numberOfSprites: 1,
+            },
+            'walk_down': {
+                row: 0,
+                numberOfSprites: 4,
+            },
+            'walk_left': {
+                row: 1,
+                numberOfSprites: 4,
+            },
+            'walk_right': {
+                row: 2,
+                numberOfSprites: 4,
+            },
+            'walk_up': {
+                row: 3,
+                numberOfSprites: 4,
+            }
         }
     });
 
@@ -31,7 +56,10 @@ export class Enemy extends CanvasItemNode {
     private targetY: number = 0;
     private reverse: boolean = false;
 
-    constructor(tileX: number, tileY: number, path: { x: number; y: number }[], spriteSheetPath: string = 'src/assets/spritesheets/enemy_1.png', tilesPerSecond?: number) {
+    constructor(tileX: number, tileY: number, path: {
+        x: number;
+        y: number
+    }[], spriteSheetPath: string = 'src/assets/spritesheets/enemy_1.png', tilesPerSecond?: number) {
         super(tileX * TILE_SIZE, tileY * TILE_SIZE, tileX, tileY);
         this.path = path;
         this.tilesPerSecond = tilesPerSecond ?? this.tilesPerSecond;

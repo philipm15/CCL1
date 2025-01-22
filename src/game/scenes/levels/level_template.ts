@@ -1,21 +1,22 @@
-import { Player, PlayerCollidedEvent } from "../game-objects/player.ts";
-import { Level, LevelConfig, LevelMapPosition, LevelPickup, LevelState } from "../../types/level.ts";
-import { CollisionMask, PLAYER_SPEED, TILE_SIZE } from "../../lib/constants.ts";
-import { Enemy } from "../game-objects/enemy.ts";
-import { CanvasManager } from "../../classes/canvas-manager.ts";
-import { importLevelFromJson, LevelLayer } from "../../lib/level-import.ts";
-import { MapBuilder } from "../../classes/map-builder.ts";
-import { Objective } from "../game-objects/objective.ts";
-import { getRandomArrayEntry, shuffleArray } from "../../lib/array-helpers.ts";
-import { EventTargetBase } from "../../lib/event-target.decorator.ts";
+import {Player, PlayerCollidedEvent} from "../game-objects/player.ts";
+import {Level, LevelConfig, LevelMapPosition, LevelPickup, LevelState} from "../../types/level.ts";
+import {CollisionMask, PLAYER_SPEED, TILE_SIZE} from "../../lib/constants.ts";
+import {Enemy} from "../game-objects/enemy.ts";
+import {UIManager} from "../../classes/ui-manager.ts";
+import {importLevelFromJson, LevelLayer} from "../../lib/level-import.ts";
+import {MapBuilder} from "../../classes/map-builder.ts";
+import {Objective} from "../game-objects/objective.ts";
+import {getRandomArrayEntry, shuffleArray} from "../../lib/array-helpers.ts";
+import {EventTargetBase} from "../../lib/event-target.decorator.ts";
 
 export class LevelTemplate extends EventTargetBase implements Level {
     private currentLevelConfig!: LevelConfig;
+    private timerInterval: ReturnType<typeof setInterval> | undefined;
     player1: Player;
     player2: Player;
     objectives: LevelPickup[] = [];
     enemies: Enemy[] = [];
-    canvasManager = CanvasManager.getInstance();
+    canvasManager = UIManager.getInstance();
     mapBuilder = MapBuilder.getInstance();
     layers: LevelLayer[] = [];
     collisionMask: number[][] = [];
@@ -24,6 +25,9 @@ export class LevelTemplate extends EventTargetBase implements Level {
     scorePlayer2 = 0;
     maxElementsToSpawn = 1;
     playerMode: Level["playerMode"] = "mp";
+    timeToFinish = 60000;
+    remainingTime = this.timeToFinish;
+    pointsToFinish = 20;
 
     constructor(player1: Player, player2: Player) {
         super();
@@ -48,6 +52,7 @@ export class LevelTemplate extends EventTargetBase implements Level {
     }
 
     init(levelConfig: LevelConfig) {
+        this.stopTimer();
         this.state = 'pause';
         this.currentLevelConfig = levelConfig;
         this.layers = importLevelFromJson(levelConfig.jsonData);
@@ -70,10 +75,13 @@ export class LevelTemplate extends EventTargetBase implements Level {
         this.scorePlayer2 = 0;
 
         this.maxElementsToSpawn = levelConfig.maxElementsToSpawn ?? 1;
+        this.remainingTime = this.timeToFinish;
+        this.updateScoreText()
+        this.updateTimeText();
     }
 
     reset() {
-        if(this.currentLevelConfig) {
+        if (this.currentLevelConfig) {
             this.init(this.currentLevelConfig);
         }
     }
@@ -114,7 +122,7 @@ export class LevelTemplate extends EventTargetBase implements Level {
         this.player1.update();
         this.player1.draw();
         // draw player 2
-        if(this.playerMode === 'mp') {
+        if (this.playerMode === 'mp') {
             this.player2.update();
             this.player2.draw();
         }
@@ -130,7 +138,7 @@ export class LevelTemplate extends EventTargetBase implements Level {
         if (this.state === 'play') {
             this.player1.move(this.player1.direction, this.collisionMask);
 
-            if(this.playerMode === 'mp') {
+            if (this.playerMode === 'mp') {
                 this.player2.move(this.player2.direction, this.collisionMask);
             }
         }
@@ -165,11 +173,13 @@ export class LevelTemplate extends EventTargetBase implements Level {
             return this.state = state;
         }
 
-        if (this.state === 'pause' || this.state === 'fail') {
+        if (this.state === 'pause') {
+            this.startTimer();
             return this.state = 'play';
         }
 
         if (this.state === 'play') {
+            this.stopTimer();
             return this.state = 'pause';
         }
     }
@@ -183,7 +193,7 @@ export class LevelTemplate extends EventTargetBase implements Level {
                     node: new Objective(
                         randomSpawnLocation.x,
                         randomSpawnLocation.y,
-                        'src/assets/sprites/plant.png'
+                        Objective.getRandomObjectiveSpritePath()
                     )
                 }
             )
@@ -215,11 +225,11 @@ export class LevelTemplate extends EventTargetBase implements Level {
             this.player1.updateDirection(this.currentLevelConfig.player1Position.direction);
             this.player1.setTilePosition(levelConfig.player1Position.x, levelConfig.player1Position.y)
 
-            if(this.player1.tilesPerSecond > PLAYER_SPEED) {
+            if (this.player1.tilesPerSecond > PLAYER_SPEED) {
                 this.player1.tilesPerSecond = PLAYER_SPEED;
             }
 
-            if(this.player1.tilesPerSecond > PLAYER_SPEED / 2) {
+            if (this.player1.tilesPerSecond > PLAYER_SPEED / 2) {
                 this.player1.tilesPerSecond = PLAYER_SPEED / 2;
                 setTimeout(() => {
                     if (this.player1.tilesPerSecond < PLAYER_SPEED) {
@@ -228,6 +238,8 @@ export class LevelTemplate extends EventTargetBase implements Level {
                 }, 900)
             }
         }
+
+        this.updateScoreText();
     }
 
     onPlayer2Collision(event: CustomEvent<PlayerCollidedEvent>) {
@@ -256,11 +268,11 @@ export class LevelTemplate extends EventTargetBase implements Level {
             this.player2.updateDirection(this.currentLevelConfig.player1Position.direction);
             this.player2.setTilePosition(levelConfig.player2Position.x, levelConfig.player2Position.y)
 
-            if(this.player2.tilesPerSecond > PLAYER_SPEED) {
+            if (this.player2.tilesPerSecond > PLAYER_SPEED) {
                 this.player2.tilesPerSecond = PLAYER_SPEED;
             }
 
-            if(this.player2.tilesPerSecond > PLAYER_SPEED / 2) {
+            if (this.player2.tilesPerSecond > PLAYER_SPEED / 2) {
                 this.player2.tilesPerSecond = PLAYER_SPEED / 2;
                 setTimeout(() => {
                     if (this.player2.tilesPerSecond < PLAYER_SPEED) {
@@ -269,10 +281,52 @@ export class LevelTemplate extends EventTargetBase implements Level {
                 }, 900)
             }
         }
+
+        this.updateScoreText();
     }
 
     private setupListeners() {
         this.player1.addEventListener('player:collided', this.onPlayer1Collision.bind(this));
         this.player2.addEventListener('player:collided', this.onPlayer2Collision.bind(this));
+    }
+
+    startTimer() {
+        this.timerInterval = setInterval(() => {
+            this.updateTimeText();
+            if (this.remainingTime > 0) {
+                this.remainingTime -= 1000; // Decrease time by 1 second
+            } else {
+                this.stopTimer();
+                this.toggleState("pause");
+            }
+        }, 1000);
+    }
+
+    stopTimer() {
+        if (this.timerInterval) {
+            clearInterval(this.timerInterval);
+            this.timerInterval = undefined;
+        }
+    }
+
+    private updateScoreText() {
+        const scoreText1 = this.canvasManager.scoreText1;
+        const scoreText2 = this.canvasManager.scoreText2;
+
+        const score1 = +((scoreText1.innerText.split(':') || ['0']).at(-1)?.trim() ?? 0);
+        if (this.scorePlayer1 !== score1) {
+            scoreText1.innerText = `SCORE: ${this.scorePlayer1 ?? 0}`;
+        }
+
+        const score2 = +((scoreText2.innerText.split(':') || ['0']).at(-1)?.trim() ?? 0);
+        if (this.scorePlayer2 !== score2) {
+            scoreText2.innerText = `SCORE: ${this.scorePlayer2 ?? 0}`;
+        }
+
+    }
+
+    private updateTimeText() {
+        const timeText = this.canvasManager.timeText;
+        timeText.innerText = `${this.remainingTime / 1000}`;
     }
 }
