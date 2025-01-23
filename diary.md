@@ -55,7 +55,7 @@
 
 - Added launch screen
 - Add score counter
-- Increase player after picking up x items
+- Increase player speed after picking up x items
 - Fix wall drawing
 
 --- 
@@ -79,3 +79,11 @@
 - Add new player spritesheets
 - Add new objective sprites
 - Add options screen
+
+---
+
+## Day 10 - 23.01.2025
+
+- Making the pitch presentation
+- Add game finished screen
+- Add ESC input handling (opens options)
