@@ -32,6 +32,12 @@ export class Game {
 
         this.canvasManager.backToOptionsBtn.addEventListener('click', () => {
             this.handleOptionsWindow();
+        });
+
+        Input.onKeyPress('Escape', () => {
+            if (!this.firstBootUp) {
+                this.handleOptionsWindow();
+            }
         })
 
         this.level.onCompleteCallback = (result: LevelResult) => this.handleGameComplete(result);
@@ -109,6 +115,7 @@ export class Game {
     }
 
     private handleOptionsWindow() {
+        this.level.toggleState("pause");
         this.canvasManager.canvas.hidden = true;
         this.canvasManager.gameOptions.style.display = 'grid';
         this.canvasManager.gameResultContainer.style.display = 'none';

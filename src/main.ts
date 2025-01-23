@@ -10,6 +10,7 @@ document.querySelector<HTMLDivElement>('#app')!.innerHTML = `
         <span>PLAYER 2: ARROW KEYS</span>
         <span>PAUSE: SPACE</span>
         <span>RESET: R</span>
+        <span>OPTIONS: ESC</span>
 </div>
   
     <div class="screen-container">
@@ -34,8 +35,10 @@ document.querySelector<HTMLDivElement>('#app')!.innerHTML = `
                 <button id="saveOptionsBtn">PLAY!</button>
                 </div>
                 <div id="gameResultContainer" style="display: none">
-                    <span id="gameResultName"></span>
-                    <span id="gameResultScore"></span>
+                    <div style="display: flex; flex-direction: column; gap: 8px">
+                        <span id="gameResultName"></span>
+                        <span id="gameResultScore"></span>
+                    </div>
                     <div class="game-result-container__buttons">
                         <button id="backToOptionsBtn">Options</button>
                         <button id="restartBtn">Restart</button>

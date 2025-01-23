@@ -25,7 +25,7 @@ export class LevelTemplate extends EventTargetBase implements Level {
     scorePlayer2 = 0;
     maxElementsToSpawn = 1;
     playerMode: Level["playerMode"] = "mp";
-    timeToFinish = 5000;
+    timeToFinish = 60000;
     remainingTime = this.timeToFinish;
     pointsToFinish = 20;
     onCompleteCallback: (result: LevelResult) => void = () => {};
