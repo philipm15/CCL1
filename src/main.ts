@@ -32,7 +32,15 @@ document.querySelector<HTMLDivElement>('#app')!.innerHTML = `
                       <span class="label right">Multiplayer</span>
                 </div>
                 <button id="saveOptionsBtn">PLAY!</button>
-</div>
+                </div>
+                <div id="gameResultContainer" style="display: none">
+                    <span id="gameResultName"></span>
+                    <span id="gameResultScore"></span>
+                    <div class="game-result-container__buttons">
+                        <button id="backToOptionsBtn">Options</button>
+                        <button id="restartBtn">Restart</button>
+                    </div>
+                </div>
                 <canvas id="gameCanvas" height="640" width="640" hidden></canvas>
             </div>
     </div>

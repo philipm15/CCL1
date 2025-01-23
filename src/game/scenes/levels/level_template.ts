@@ -1,13 +1,13 @@
-import {Player, PlayerCollidedEvent} from "../game-objects/player.ts";
-import {Level, LevelConfig, LevelMapPosition, LevelPickup, LevelState} from "../../types/level.ts";
-import {CollisionMask, PLAYER_SPEED, TILE_SIZE} from "../../lib/constants.ts";
-import {Enemy} from "../game-objects/enemy.ts";
-import {UIManager} from "../../classes/ui-manager.ts";
-import {importLevelFromJson, LevelLayer} from "../../lib/level-import.ts";
-import {MapBuilder} from "../../classes/map-builder.ts";
-import {Objective} from "../game-objects/objective.ts";
-import {getRandomArrayEntry, shuffleArray} from "../../lib/array-helpers.ts";
-import {EventTargetBase} from "../../lib/event-target.decorator.ts";
+import { Player, PlayerCollidedEvent } from "../game-objects/player.ts";
+import { Level, LevelConfig, LevelMapPosition, LevelPickup, LevelResult, LevelState } from "../../types/level.ts";
+import { CollisionMask, PLAYER_SPEED, TILE_SIZE } from "../../lib/constants.ts";
+import { Enemy } from "../game-objects/enemy.ts";
+import { UIManager } from "../../classes/ui-manager.ts";
+import { importLevelFromJson, LevelLayer } from "../../lib/level-import.ts";
+import { MapBuilder } from "../../classes/map-builder.ts";
+import { Objective } from "../game-objects/objective.ts";
+import { getRandomArrayEntry, shuffleArray } from "../../lib/array-helpers.ts";
+import { EventTargetBase } from "../../lib/event-target.decorator.ts";
 
 export class LevelTemplate extends EventTargetBase implements Level {
     private currentLevelConfig!: LevelConfig;
@@ -25,9 +25,10 @@ export class LevelTemplate extends EventTargetBase implements Level {
     scorePlayer2 = 0;
     maxElementsToSpawn = 1;
     playerMode: Level["playerMode"] = "mp";
-    timeToFinish = 60000;
+    timeToFinish = 5000;
     remainingTime = this.timeToFinish;
     pointsToFinish = 20;
+    onCompleteCallback: (result: LevelResult) => void = () => {};
 
     constructor(player1: Player, player2: Player) {
         super();
@@ -151,7 +152,7 @@ export class LevelTemplate extends EventTargetBase implements Level {
 
 
     onComplete() {
-        this.onCompleteCallback && this.onCompleteCallback();
+        this.onCompleteCallback && this.onCompleteCallback(this.getGameResult());
     }
 
     setCollisionMask(tileX: number, tileY: number, collisionMask: CollisionMask) {
@@ -298,6 +299,7 @@ export class LevelTemplate extends EventTargetBase implements Level {
             } else {
                 this.stopTimer();
                 this.toggleState("pause");
+                this.onComplete();
             }
         }, 1000);
     }
@@ -307,6 +309,13 @@ export class LevelTemplate extends EventTargetBase implements Level {
             clearInterval(this.timerInterval);
             this.timerInterval = undefined;
         }
+    }
+
+    getGameResult(): LevelResult {
+        const score = Math.max(this.scorePlayer1, this.scorePlayer2);
+        const name = score === this.scorePlayer1 ? 'Player 1' : 'Player 2';
+
+        return {score, name};
     }
 
     private updateScoreText() {

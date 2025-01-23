@@ -20,8 +20,7 @@ export interface Level {
     player2: Player;
     objectives: LevelPickup[];
     collisionMask: LevelMap;
-    onCompleteCallback?: () => void;
-    onFailedCallback?: () => void;
+    onCompleteCallback?: (result: LevelResult) => void;
     state: LevelState;
     possibleSpawnLocations: LevelMapPosition[];
     scorePlayer1: number;
@@ -64,4 +63,9 @@ export type LevelConfig = {
     player2Position: LevelMapPosition & { direction: CanvasItemNode["direction"] };
     enemies: { position: LevelMapPosition, path: LevelMapPosition[], tilesPerSecond?: number }[];
     maxElementsToSpawn?: number;
+}
+
+export type LevelResult = {
+    name: string;
+    score: number;
 }

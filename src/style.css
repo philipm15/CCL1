@@ -126,13 +126,21 @@ button {
         height: inherit;
         width: inherit;
 
-        #gameOptions {
+        #gameOptions, #gameResultContainer {
             height: inherit;
             width: inherit;
             border: 4px solid #522438;
             background-color: #6e534f;
             display: grid;
             place-items: center;
+        }
+
+        .game-result-container__buttons {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            flex-direction: row;
+            column-gap: 0.5rem;
         }
     }
 }

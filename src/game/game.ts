@@ -1,10 +1,10 @@
-import {UIManager} from "./classes/ui-manager.ts";
-import {Level_1} from "./scenes/levels/level_1.ts";
-import {Player} from "./scenes/game-objects/player.ts";
-import {Input} from "./classes/input.ts";
-import {MapBuilder} from "./classes/map-builder.ts";
-import {LevelTemplate} from "./scenes/levels/level_template.ts";
-import {Level} from "./types/level.ts";
+import { UIManager } from "./classes/ui-manager.ts";
+import { Level_1 } from "./scenes/levels/level_1.ts";
+import { Player } from "./scenes/game-objects/player.ts";
+import { Input } from "./classes/input.ts";
+import { MapBuilder } from "./classes/map-builder.ts";
+import { LevelTemplate } from "./scenes/levels/level_template.ts";
+import { Level, LevelResult } from "./types/level.ts";
 
 export enum GameLevel {
     Level_1 = 1,
@@ -24,9 +24,25 @@ export class Game {
 
     constructor() {
         this.canvasManager = UIManager.getInstance();
+        this.canvasManager.restartBtn.addEventListener('click', () => {
+            this.canvasManager.canvas.hidden = false;
+            this.canvasManager.gameResultContainer.style.display = 'none';
+            this.level.reset();
+        });
+
+        this.canvasManager.backToOptionsBtn.addEventListener('click', () => {
+            this.handleOptionsWindow();
+        })
+
+        this.level.onCompleteCallback = (result: LevelResult) => this.handleGameComplete(result);
+
         this.canvasManager.saveOptionsBtn.addEventListener('click', () => {
             this.playerMode = this.canvasManager.playerModeToggle.checked ? 'mp' : 'sp';
             this.canvasManager.gameOptions.style.display = 'none';
+            this.level.playerMode = this.playerMode;
+            this.canvasManager.scoreText1.hidden = false;
+            this.canvasManager.timeText.hidden = false;
+            this.canvasManager.scoreText2.hidden = this.playerMode !== 'mp';
             if (this.firstBootUp) {
                 this.firstBootUp = false;
                 this.mapBuilder.loadImages().then(() => {
@@ -42,14 +58,11 @@ export class Game {
                         this.level.reset();
                     })
                 });
-
-                this.level.playerMode = this.playerMode;
-                this.canvasManager.scoreText1.hidden = false;
-                this.canvasManager.timeText.hidden = false;
-                if (this.playerMode === 'mp') {
-                    this.canvasManager.scoreText2.hidden = false;
-                }
+            } else {
+                this.level.reset();
             }
+
+            this.canvasManager.canvas.hidden = false;
         })
     }
 
@@ -86,5 +99,19 @@ export class Game {
         if (this.input.isKeyPressed('ArrowRight')) this.player2.updateDirection('right');
     }
 
+    private handleGameComplete(result: LevelResult) {
+        this.canvasManager.gameResultContainer.style.display = 'grid';
+        this.canvasManager.canvas.hidden = true;
+        const nameEl = this.canvasManager.gameResultName;
+        const scoreEl = this.canvasManager.gameResultScore;
 
+        nameEl.innerText = `Winner: ${ result.name }`;
+        scoreEl.innerText = `Score: ${ result.score }`;
+    }
+
+    private handleOptionsWindow() {
+        this.canvasManager.canvas.hidden = true;
+        this.canvasManager.gameOptions.style.display = 'grid';
+        this.canvasManager.gameResultContainer.style.display = 'none';
+    }
 }
