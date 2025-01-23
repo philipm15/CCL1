@@ -87,3 +87,5 @@
 - Making the pitch presentation
 - Add game finished screen
 - Add ESC input handling (opens options)
+- Add Level 2
+- Add Level selection to options screen
