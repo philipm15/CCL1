@@ -101,7 +101,6 @@ export class Game {
 
     private handleGameComplete(result: LevelResult) {
         this.canvasManager.gameResultContainer.style.display = 'grid';
-        this.canvasManager.canvas.hidden = true;
         const nameEl = this.canvasManager.gameResultName;
         const scoreEl = this.canvasManager.gameResultScore;
 

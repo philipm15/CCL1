@@ -135,6 +135,11 @@ button {
             place-items: center;
         }
 
+        #gameResultContainer {
+            position: absolute;
+            opacity: 0.85;
+        }
+
         .game-result-container__buttons {
             display: flex;
             justify-content: center;
