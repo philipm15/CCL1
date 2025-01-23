@@ -32,6 +32,16 @@ document.querySelector<HTMLDivElement>('#app')!.innerHTML = `
                       <label for="playerMode"></label>
                       <span class="label right">Multiplayer</span>
                 </div>
+                <div class="pixel-radio-group">
+                  <label class="pixel-radio">
+                    <input type="radio" name="level" value="1" checked />
+                    <span>Level 1</span>
+                  </label>
+                  <label class="pixel-radio">
+                    <input type="radio" name="level" value="2" />
+                    <span>Level 2</span>
+                  </label>
+                </div>
                 <button id="saveOptionsBtn">PLAY!</button>
                 </div>
                 <div id="gameResultContainer" style="display: none">

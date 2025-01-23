@@ -1,15 +1,11 @@
-import { UIManager } from "./classes/ui-manager.ts";
-import { Level_1 } from "./scenes/levels/level_1.ts";
-import { Player } from "./scenes/game-objects/player.ts";
-import { Input } from "./classes/input.ts";
-import { MapBuilder } from "./classes/map-builder.ts";
-import { LevelTemplate } from "./scenes/levels/level_template.ts";
-import { Level, LevelResult } from "./types/level.ts";
-
-export enum GameLevel {
-    Level_1 = 1,
-    Level_2 = 2,
-}
+import {UIManager} from "./classes/ui-manager.ts";
+import {Level_1} from "./scenes/levels/level_1.ts";
+import {Player} from "./scenes/game-objects/player.ts";
+import {Input} from "./classes/input.ts";
+import {MapBuilder} from "./classes/map-builder.ts";
+import {LevelTemplate} from "./scenes/levels/level_template.ts";
+import {Level, LevelConfig, LevelResult} from "./types/level.ts";
+import {Level_2} from "./scenes/levels/level_2.ts";
 
 export class Game {
     private canvasManager: UIManager;
@@ -49,11 +45,12 @@ export class Game {
             this.canvasManager.scoreText1.hidden = false;
             this.canvasManager.timeText.hidden = false;
             this.canvasManager.scoreText2.hidden = this.playerMode !== 'mp';
+            this.setLevel(this.getSelectedLevel());
+
             if (this.firstBootUp) {
                 this.firstBootUp = false;
                 this.mapBuilder.loadImages().then(() => {
                     this.canvasManager.canvas.hidden = false;
-                    this.setLevel(GameLevel.Level_1);
                     this.gameLoop();
 
                     Input.onKeyPress(' ', () => {
@@ -72,11 +69,9 @@ export class Game {
         })
     }
 
-    setLevel(level: GameLevel) {
-        if (level === GameLevel.Level_1) {
-            this.level.toggleState("pause");
-            this.level.init(Level_1);
-        }
+    setLevel(level: LevelConfig) {
+        this.level.toggleState("pause");
+        this.level.init(level);
     }
 
     private gameLoop() {
@@ -110,8 +105,8 @@ export class Game {
         const nameEl = this.canvasManager.gameResultName;
         const scoreEl = this.canvasManager.gameResultScore;
 
-        nameEl.innerText = `Winner: ${ result.name }`;
-        scoreEl.innerText = `Score: ${ result.score }`;
+        nameEl.innerText = `Winner: ${result.name}`;
+        scoreEl.innerText = `Score: ${result.score}`;
     }
 
     private handleOptionsWindow() {
@@ -119,5 +114,19 @@ export class Game {
         this.canvasManager.canvas.hidden = true;
         this.canvasManager.gameOptions.style.display = 'grid';
         this.canvasManager.gameResultContainer.style.display = 'none';
+    }
+
+    private getSelectedLevel(): LevelConfig {
+        const selectedValue = (document.querySelector('.pixel-radio input:checked') as HTMLInputElement)!.value;
+        console.log({selectedValue})
+
+        switch (+selectedValue) {
+            case 1:
+                return Level_1;
+            case 2:
+                return Level_2;
+            default:
+                return Level_1;
+        }
     }
 }
