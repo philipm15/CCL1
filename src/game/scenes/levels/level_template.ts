@@ -1,15 +1,14 @@
-import { Player, PlayerCollidedEvent } from "../game-objects/player.ts";
-import { Level, LevelConfig, LevelMapPosition, LevelPickup, LevelResult, LevelState } from "../../types/level.ts";
-import { CollisionMask, PLAYER_SPEED, TILE_SIZE } from "../../lib/constants.ts";
-import { Enemy } from "../game-objects/enemy.ts";
-import { UIManager } from "../../classes/ui-manager.ts";
-import { importLevelFromJson, LevelLayer } from "../../lib/level-import.ts";
-import { MapBuilder } from "../../classes/map-builder.ts";
-import { Objective } from "../game-objects/objective.ts";
-import { getRandomArrayEntry, shuffleArray } from "../../lib/array-helpers.ts";
-import { EventTargetBase } from "../../lib/event-target.decorator.ts";
+import {Player, PlayerCollidedEvent} from "../game-objects/player.ts";
+import {Level, LevelConfig, LevelMapPosition, LevelPickup, LevelResult, LevelState} from "../../types/level.ts";
+import {CollisionMask, PLAYER_SPEED, TILE_SIZE} from "../../lib/constants.ts";
+import {Enemy} from "../game-objects/enemy.ts";
+import {UIManager} from "../../classes/ui-manager.ts";
+import {importLevelFromJson, LevelLayer} from "../../lib/level-import.ts";
+import {MapBuilder} from "../../classes/map-builder.ts";
+import {Objective} from "../game-objects/objective.ts";
+import {getRandomArrayEntry, shuffleArray} from "../../lib/array-helpers.ts";
 
-export class LevelTemplate extends EventTargetBase implements Level {
+export class LevelTemplate implements Level {
     private currentLevelConfig!: LevelConfig;
     private timerInterval: ReturnType<typeof setInterval> | undefined;
     player1: Player;
@@ -31,7 +30,6 @@ export class LevelTemplate extends EventTargetBase implements Level {
     onCompleteCallback: (result: LevelResult) => void = () => {};
 
     constructor(player1: Player, player2: Player) {
-        super();
         this.player1 = player1;
         this.player2 = player2;
         player1.stopMove();
@@ -130,7 +128,7 @@ export class LevelTemplate extends EventTargetBase implements Level {
         // Draw player 1
         this.player1.update();
         this.player1.draw();
-        // draw player 2
+        // draw player 2 if multiplayer
         if (this.playerMode === 'mp') {
             this.player2.update();
             this.player2.draw();
@@ -294,11 +292,6 @@ export class LevelTemplate extends EventTargetBase implements Level {
         this.updateScoreText();
     }
 
-    private setupListeners() {
-        this.player1.addEventListener('player:collided', this.onPlayer1Collision.bind(this));
-        this.player2.addEventListener('player:collided', this.onPlayer2Collision.bind(this));
-    }
-
     startTimer() {
         this.timerInterval = setInterval(() => {
             this.updateTimeText();
@@ -324,6 +317,11 @@ export class LevelTemplate extends EventTargetBase implements Level {
         const name = score === this.scorePlayer1 ? 'Player 1' : 'Player 2';
 
         return {score, name};
+    }
+
+    private setupListeners() {
+        this.player1.addEventListener('player:collided', this.onPlayer1Collision.bind(this));
+        this.player2.addEventListener('player:collided', this.onPlayer2Collision.bind(this));
     }
 
     private updateScoreText() {

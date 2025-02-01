@@ -1,7 +1,5 @@
 export const TILE_SIZE = 32;
 export const MAP_SIZE = 20;
-export const CANVAS_SIZE = 640;
-export const CAMERA_TILES = 8;
 export const PLAYER_SPEED = 4.5;
 export const OBJECTIVE_SPRITE_PATHS = [
     'assets/sprites/money_bag.png',

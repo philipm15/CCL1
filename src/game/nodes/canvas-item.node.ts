@@ -1,6 +1,8 @@
 import {UIManager} from "../classes/ui-manager.ts";
 import {TILE_SIZE} from "../lib/constants.ts";
 
+export type CanvasItemNodeDirection = 'up' | 'down' | 'left' | 'right';
+
 export class CanvasItemNode {
     tileSize = TILE_SIZE;
     // Matrix coordinate of X
@@ -12,7 +14,7 @@ export class CanvasItemNode {
     // Canvas coordinate of Y
     y: number;
     ctx = UIManager.getInstance().ctx;
-    direction: 'up' | 'down' | 'left' | 'right' = 'down';
+    direction: CanvasItemNodeDirection = 'down';
 
     constructor(x: number, y: number, tileX: number, tileY: number) {
         this.x = x;

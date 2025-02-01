@@ -1,4 +1,4 @@
-import {CanvasItemNode} from "../../nodes/canvas-item.node.ts";
+import {CanvasItemNode, CanvasItemNodeDirection} from "../../nodes/canvas-item.node.ts";
 import {AnimatedSpriteNode} from "../../nodes/animated-sprite.node.ts";
 import {CollisionMask, MAP_SIZE, PLAYER_SPEED, TILE_SIZE} from "../../lib/constants.ts";
 import {EventTargetMixin} from "../../lib/event-target.decorator.ts";
@@ -10,7 +10,7 @@ export type PlayerCollidedEvent = {
 export class Player extends EventTargetMixin(CanvasItemNode) {
     tilesPerSecond = PLAYER_SPEED;
     private animatedSpriteNode = new AnimatedSpriteNode({
-        spriteSheetPath: 'assets/spritesheets/player.png',
+        spriteSheetPath: 'assets/spritesheets/player_blue.png',
         rows: 4,
         cols: 4,
         defaultAnimation: 'idle_down',
@@ -94,27 +94,24 @@ export class Player extends EventTargetMixin(CanvasItemNode) {
         this.dispatchEvent(new Event('player:update'));
     }
 
-    move(direction: string, collisionMask: number[][]) {
+    move(direction: CanvasItemNodeDirection, collisionMask: number[][]) {
         if (this.moving) return; // Ignore input during movement
 
         let newTileX = this.tileX;
         let newTileY = this.tileY;
 
+        this.direction = direction;
         if (direction === 'up') {
             newTileY--;
-            this.direction = 'up';
         }
         if (direction === 'down') {
             newTileY++;
-            this.direction = 'down';
         }
         if (direction === 'left') {
             newTileX--;
-            this.direction = 'left';
         }
         if (direction === 'right') {
             newTileX++;
-            this.direction = 'right';
         }
 
         this.animatedSpriteNode.playAnimation(`walk_${this.direction}`);

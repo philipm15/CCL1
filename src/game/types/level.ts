@@ -1,17 +1,7 @@
 import {Player} from "../scenes/game-objects/player.ts";
 import {Objective} from "../scenes/game-objects/objective.ts";
-import {Item} from "./item.ts";
-import {Camera} from "../classes/camera.ts";
 import {JsonLevelData} from "../lib/level-import.ts";
 import {CanvasItemNode} from "../nodes/canvas-item.node.ts";
-
-export type LevelObjective = {
-    item: Item;
-    node: Objective;
-    required: boolean;
-    acquired: boolean;
-    itemsRequired?: Item[];
-}
 
 export type LevelMap = number[][];
 
@@ -32,7 +22,7 @@ export interface Level {
     remainingTime: number;
     pointsToFinish: number;
 
-    draw(camera: Camera): void;
+    draw(): void;
 
     onComplete(): void;
 

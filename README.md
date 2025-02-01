@@ -6,7 +6,7 @@
 ---
 
 ## 🌐 **Play the Game**
-[Click here to play the game!](https://your-github-username.github.io/repository-name)
+[Click here to play the game!](https://philipm15.github.io/CCL1/)
 
 ---
 
@@ -14,7 +14,7 @@
 
 ### Main Gameplay:
 <div style="text-align: center;">
-  <img src="gameplay.png" alt="Gameplay Screenshot" width="600">
+  <img src="public/assets/screenshots/main_gameplay.png" alt="Main Gameplay Screenshot" width="600">
   <p>*Figure 1: Example of gameplay in action.*</p>
 </div>
 
@@ -22,7 +22,8 @@
 
 ### Menu and UI:
 <div style="text-align: center;">
-  <img src="menu.png" alt="Menu UI Screenshot" width="600">
+  <img src="public/assets/screenshots/options.PNG" alt="Menu UI Screenshot" width="600">
+  <img src="public/assets/screenshots/game_result.PNG" alt="Menu UI Screenshot" width="600">
   <p>*Figure 2: Menu and user interface.*</p>
 </div>
 
@@ -33,7 +34,8 @@ Below are the sprites used to create characters and objects in the game:
 
 ### Player Character:
 <div style="text-align: center;">
-  <img src="playersheet.png" alt="Player Spritesheet" width="500">
+  <img src="public/assets/spritesheets/player_blue.png" alt="Player Blue Spritesheet" width="500">
+<img src="public/assets/spritesheets/player_red.png" alt="Player Red Spritesheet" width="500">
   <p>*Figure 3: Player character animations.*</p>
 </div>
 
@@ -41,7 +43,7 @@ Below are the sprites used to create characters and objects in the game:
 
 ### Enemies and NPCs:
 <div style="text-align: center;">
-  <img src="enemysheet.png" alt="Enemy Spritesheet" width="500">
+  <img src="public/assets/spritesheets/enemy_1.png" alt="Enemy Spritesheet" width="500">
   <p>*Figure 4: Enemy animations.*</p>
 </div>
 

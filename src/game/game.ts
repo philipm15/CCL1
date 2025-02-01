@@ -8,7 +8,7 @@ import {Level, LevelConfig, LevelResult} from "./types/level.ts";
 import {Level_2} from "./scenes/levels/level_2.ts";
 
 export class Game {
-    private canvasManager: UIManager;
+    private canvasManager: UIManager = UIManager.getInstance();
     private player1 = new Player(0, 0);
     private player2 = new Player(0, 0, 'assets/spritesheets/player_blue.png');
     private level = new LevelTemplate(this.player1, this.player2);
@@ -19,7 +19,6 @@ export class Game {
     firstBootUp = true;
 
     constructor() {
-        this.canvasManager = UIManager.getInstance();
         this.canvasManager.restartBtn.addEventListener('click', () => {
             this.canvasManager.canvas.hidden = false;
             this.canvasManager.gameResultContainer.style.display = 'none';
