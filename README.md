@@ -1,6 +1,6 @@
 # 🎮 **Overdosed on Overtime**
 
-> **Short Pitch**: Collect as many randomly spawning items as can in a minute without colliding with enemies or objects.
+> **Short Pitch**: Collect as many randomly spawning items as you can in a minute without colliding with enemies or objects.
 > The player can only change the direction of the character with WASD. Play alone or against your friends in local
 > multiplayer mode!
 
@@ -69,8 +69,11 @@ Download Tiled: [Tiled Map Editor](https://www.mapeditor.org/)
 
 - **Tiled:** The game levels are created using Tiled, a free and open-source map editor. The levels are exported as JSON
   files and loaded into the game using a custom importer.
-- **Creating new Levels:** Create a new `LevelConfig` object in the `src/game/scenes/levels` directory that implements the
+- **Creating new Levels:** Create a new `LevelConfig` object in the `src/game/scenes/levels` directory that implements
+  the
   `Level` class. This object imports the JSON file and sets the level properties such as spawn positions and enemies.
+- **Adding new Levels:** Add a new options under `pixel-radio-group` in the `main.ts` file to select the new level. Add
+  a new case in the `switch` statement in the `Game` class to load the new level.
 
 ## ✍️ **Reflection**
 
@@ -101,6 +104,8 @@ Download Tiled: [Tiled Map Editor](https://www.mapeditor.org/)
   have smooth movement. This was difficult to implement and required a lot of tweaking. I ended up using linear
   interpolation to make the movement feel smooth. This works for the game because the players moves automatically and
   only controls the direction, but it would not work for a game where the player has to move manually.
+- **Creating Assets:** Creating custom sprites and animations was very time-consuming even tho I used a free template.
+  Pixel Art is hard.
 
 ### Lessons Learned:
 
