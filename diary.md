@@ -89,3 +89,10 @@
 - Add ESC input handling (opens options)
 - Add Level 2
 - Add Level selection to options screen
+
+---
+
+## Day 11 - 24.01.2025
+
+- Presentation
+- Game Fair
