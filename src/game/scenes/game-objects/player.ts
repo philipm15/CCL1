@@ -1,15 +1,14 @@
-import {CanvasItemNode, CanvasItemNodeDirection} from "../../nodes/canvas-item.node.ts";
+import {CanvasItemNodeDirection} from "../../nodes/canvas-item.node.ts";
 import {AnimatedSpriteNode} from "../../nodes/animated-sprite.node.ts";
-import {CollisionMask, MAP_SIZE, PLAYER_SPEED, TILE_SIZE} from "../../lib/constants.ts";
-import {EventTargetMixin} from "../../lib/event-target.decorator.ts";
+import {CollisionMask, MAP_SIZE, TILE_SIZE} from "../../lib/constants.ts";
+import {AnimatedCharacterNode} from "../../nodes/animated-character.node.ts";
 
 export type PlayerCollidedEvent = {
     collisionMask: number;
 }
 
-export class Player extends EventTargetMixin(CanvasItemNode) {
-    tilesPerSecond = PLAYER_SPEED;
-    private animatedSpriteNode = new AnimatedSpriteNode({
+export class Player extends AnimatedCharacterNode {
+    animatedSpriteNode = new AnimatedSpriteNode({
         spriteSheetPath: 'assets/spritesheets/player_blue.png',
         rows: 4,
         cols: 4,
@@ -51,26 +50,10 @@ export class Player extends EventTargetMixin(CanvasItemNode) {
         }
     });
 
-    private moveStartTime: number = 0;
-    private moving: boolean = false;
-    private startX: number = 0;
-    private startY: number = 0;
-    private targetX: number = 0;
-    private targetY: number = 0;
-
     constructor(tileX: number, tileY: number, spriteSheetPath: string = 'assets/spritesheets/player_red.png') {
         super(tileX * TILE_SIZE, tileY * TILE_SIZE, tileX, tileY);
         this.animatedSpriteNode.config.spriteSheetPath = spriteSheetPath;
         this.animatedSpriteNode.init();
-    }
-
-    draw() {
-        if (!this.animatedSpriteNode.currentAnimation) return;
-
-        const frames = this.animatedSpriteNode.currentAnimation.frames;
-        const frame = frames[Math.floor(Date.now() / 150) % frames.length];
-
-        this.ctx.drawImage(frame, this.x, this.y, this.tileSize, this.tileSize);
     }
 
     update() {
@@ -148,22 +131,5 @@ export class Player extends EventTargetMixin(CanvasItemNode) {
                 }
             }));
         }
-    }
-
-    stopMove(direction: Player["direction"] = this.direction) {
-        this.updateDirection(direction);
-        this.animatedSpriteNode.playAnimation(`idle_${this.direction}`);
-    }
-
-    setTilePosition(tileX: number, tileY: number) {
-        this.tileX = tileX;
-        this.tileY = tileY;
-        this.x = this.tileX * TILE_SIZE;
-        this.y = this.tileY * TILE_SIZE;
-        this.moving = false;
-    }
-
-    updateDirection(direction: Player["direction"] = this.direction) {
-        this.direction = direction;
     }
 }

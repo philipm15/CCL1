@@ -15,8 +15,8 @@ export function extractFramesFromSpritesheet(
             const canvas = document.createElement("canvas");
             const ctx = canvas.getContext("2d");
 
-            if (!ctx) {
-                throw new Error("Failed to get 2D context for canvas.");
+            if (!canvas || !ctx) {
+                throw new Error("Failed to get canvas or 2D context for canvas.");
             }
 
             canvas.width = tileWidth;

@@ -1,10 +1,14 @@
-import {CanvasItemNode} from "../../nodes/canvas-item.node.ts";
 import {AnimatedSpriteNode} from "../../nodes/animated-sprite.node.ts";
 import {TILE_SIZE} from "../../lib/constants.ts";
+import {AnimatedCharacterNode} from "../../nodes/animated-character.node.ts";
 
-export class Enemy extends CanvasItemNode {
-    private tilesPerSecond = 2; // Speed of the enemy
-    private animatedSpriteNode = new AnimatedSpriteNode({
+export class Enemy extends AnimatedCharacterNode {
+    private path: { x: number; y: number }[] = [];
+    private currentPathIndex: number = 0;
+    private reverse: boolean = false;
+
+    tilesPerSecond = 2; // Speed of the enemy
+    animatedSpriteNode = new AnimatedSpriteNode({
         spriteSheetPath: 'assets/spritesheets/enemy_1.png',
         rows: 4,
         cols: 4,
@@ -46,16 +50,6 @@ export class Enemy extends CanvasItemNode {
         }
     });
 
-    private path: { x: number; y: number }[] = [];
-    private currentPathIndex: number = 0;
-    private moveStartTime: number = 0;
-    private moving: boolean = false;
-    private startX: number = 0;
-    private startY: number = 0;
-    private targetX: number = 0;
-    private targetY: number = 0;
-    private reverse: boolean = false;
-
     constructor(tileX: number, tileY: number, path: {
         x: number;
         y: number
@@ -71,14 +65,6 @@ export class Enemy extends CanvasItemNode {
         if (path && path.length > 0) {
             this.startNextMove();
         }
-    }
-
-    draw() {
-        if (!this.animatedSpriteNode.currentAnimation) return;
-
-        const frames = this.animatedSpriteNode.currentAnimation.frames;
-        const frame = frames[Math.floor(Date.now() / 150) % frames.length];
-        this.ctx.drawImage(frame, this.x, this.y, this.tileSize, this.tileSize);
     }
 
     update() {
@@ -131,14 +117,6 @@ export class Enemy extends CanvasItemNode {
         this.tileY = nextTile.y;
         this.moveStartTime = Date.now();
         this.moving = true;
-    }
-
-    getDirectionToTile(nextTile: { x: number; y: number }): CanvasItemNode["direction"] {
-        if (nextTile.x > this.tileX) return "right";
-        if (nextTile.x < this.tileX) return "left";
-        if (nextTile.y > this.tileY) return "down";
-        if (nextTile.y < this.tileY) return "up";
-        return "down";
     }
 }
 
