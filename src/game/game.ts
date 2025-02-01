@@ -10,7 +10,7 @@ import {Level_2} from "./scenes/levels/level_2.ts";
 export class Game {
     private canvasManager: UIManager;
     private player1 = new Player(0, 0);
-    private player2 = new Player(0, 0, 'src/assets/spritesheets/player_blue.png');
+    private player2 = new Player(0, 0, 'assets/spritesheets/player_blue.png');
     private level = new LevelTemplate(this.player1, this.player2);
     private input = new Input();
     private mapBuilder = new MapBuilder();
@@ -102,6 +102,7 @@ export class Game {
 
     private handleGameComplete(result: LevelResult) {
         this.canvasManager.gameResultContainer.style.display = 'grid';
+        this.canvasManager.launchScreen.style.display = 'none';
         const nameEl = this.canvasManager.gameResultName;
         const scoreEl = this.canvasManager.gameResultScore;
 
@@ -114,11 +115,11 @@ export class Game {
         this.canvasManager.canvas.hidden = true;
         this.canvasManager.gameOptions.style.display = 'grid';
         this.canvasManager.gameResultContainer.style.display = 'none';
+        this.canvasManager.launchScreen.style.display = 'none';
     }
 
     private getSelectedLevel(): LevelConfig {
         const selectedValue = (document.querySelector('.pixel-radio input:checked') as HTMLInputElement)!.value;
-        console.log({selectedValue})
 
         switch (+selectedValue) {
             case 1:

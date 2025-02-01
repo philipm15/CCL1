@@ -16,10 +16,10 @@ export class MapBuilder {
         };
 
         return Promise.all([
-            loadImage('src/assets/spritesheets/interior.png').then((interiorImage) => {
+            loadImage('assets/spritesheets/interior.png').then((interiorImage) => {
                 return extractSpritesFromSpritesheet(interiorImage, 89, 16, 392);
             }),
-            loadImage('src/assets/spritesheets/room_builder.png').then((roomBuilderImage) => {
+            loadImage('assets/spritesheets/room_builder.png').then((roomBuilderImage) => {
                 return extractSpritesFromSpritesheet(roomBuilderImage, 23, 17);
             }),
         ]).then(([interiorTiles, roomBuilderTiles]) => {

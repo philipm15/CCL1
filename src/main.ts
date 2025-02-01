@@ -61,8 +61,8 @@ document.querySelector<HTMLDivElement>('#app')!.innerHTML = `
 `
 
 const audioToggle = document.getElementById('audioToggle')! as HTMLButtonElement;
-const backgroundMusic = new Audio('src/assets/sounds/bg.mp3');
-backgroundMusic.volume = 0 //0.03;
+const backgroundMusic = new Audio('assets/sounds/bg.mp3');
+backgroundMusic.volume = 0.03;
 
 audioToggle.addEventListener('click', () => {
     if (backgroundMusic.paused) {

@@ -15,6 +15,7 @@ export class UIManager {
     public gameResultScore: HTMLSpanElement;
     public backToOptionsBtn: HTMLButtonElement;
     public restartBtn: HTMLButtonElement;
+    public launchScreen: HTMLDivElement;
 
     private constructor() {
         this.canvas = document.getElementById('gameCanvas') as HTMLCanvasElement;
@@ -32,6 +33,7 @@ export class UIManager {
         this.gameResultScore = document.getElementById('gameResultScore') as HTMLSpanElement;
         this.backToOptionsBtn = document.getElementById('backToOptionsBtn') as HTMLButtonElement;
         this.restartBtn = document.getElementById('restartBtn') as HTMLButtonElement;
+        this.launchScreen = document.getElementById('launchScreen')! as HTMLDivElement;
     }
 
     static getInstance(): UIManager {

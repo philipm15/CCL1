@@ -80,6 +80,7 @@ button {
         place-items: center;
         height: 100%;
         width: 100%;
+        z-index: 0;
 
         .game-screen {
             display: grid;
@@ -133,6 +134,8 @@ button {
             background-color: #6e534f;
             display: grid;
             place-items: center;
+            position: relative;
+            z-index: 1;
         }
 
         #gameResultContainer {

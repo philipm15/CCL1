@@ -88,6 +88,14 @@ export class LevelTemplate extends EventTargetBase implements Level {
     }
 
     draw(): void {
+        if(this.state === 'pause' && this.remainingTime > 0) {
+            this.canvasManager.launchScreen.style.display = 'grid';
+            this.canvasManager.launchScreen.style.opacity = '0.3';
+            this.canvasManager.launchScreen.style.position = 'absolute';
+        } else {
+            this.canvasManager.launchScreen.style.display = 'none';
+        }
+
         this.checkAndCreateObjectives();
         const ctx = this.canvasManager.ctx; // Replace with your actual canvas context
         ctx.save();

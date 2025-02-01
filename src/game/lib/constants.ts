@@ -4,9 +4,9 @@ export const CANVAS_SIZE = 640;
 export const CAMERA_TILES = 8;
 export const PLAYER_SPEED = 4.5;
 export const OBJECTIVE_SPRITE_PATHS = [
-    'src/assets/sprites/money_bag.png',
-    'src/assets/sprites/pill_orange.png',
-    'src/assets/sprites/pill_violet.png',
+    'assets/sprites/money_bag.png',
+    'assets/sprites/pill_orange.png',
+    'assets/sprites/pill_violet.png',
 ]
 
 export enum CollisionMask {

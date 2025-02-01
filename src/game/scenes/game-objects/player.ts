@@ -10,7 +10,7 @@ export type PlayerCollidedEvent = {
 export class Player extends EventTargetMixin(CanvasItemNode) {
     tilesPerSecond = PLAYER_SPEED;
     private animatedSpriteNode = new AnimatedSpriteNode({
-        spriteSheetPath: 'src/assets/spritesheets/player.png',
+        spriteSheetPath: 'assets/spritesheets/player.png',
         rows: 4,
         cols: 4,
         defaultAnimation: 'idle_down',
@@ -58,7 +58,7 @@ export class Player extends EventTargetMixin(CanvasItemNode) {
     private targetX: number = 0;
     private targetY: number = 0;
 
-    constructor(tileX: number, tileY: number, spriteSheetPath: string = 'src/assets/spritesheets/player_red.png') {
+    constructor(tileX: number, tileY: number, spriteSheetPath: string = 'assets/spritesheets/player_red.png') {
         super(tileX * TILE_SIZE, tileY * TILE_SIZE, tileX, tileY);
         this.animatedSpriteNode.config.spriteSheetPath = spriteSheetPath;
         this.animatedSpriteNode.init();
