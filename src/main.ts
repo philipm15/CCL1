@@ -22,7 +22,7 @@ document.querySelector<HTMLDivElement>('#app')!.innerHTML = `
             <div id="launchScreen" class="launch-screen">
                 <div class="game-screen">
                 </div>
-                <span class="launch-screen-text">PRESS SPACE TO START</span>
+                <span class="launch-screen-text" hidden>PRESS SPACE TO START</span>
             </div>
             <div class="game-canvas-container" style="display: none">
                 <div id="gameOptions">
@@ -76,6 +76,12 @@ audioToggle.addEventListener('click', () => {
 
 
 const launchScreen = document.getElementById('launchScreen')! as HTMLDivElement;
+const gameScreen = document.querySelector('.game-screen')! as HTMLDivElement;
+fadeIn(gameScreen, () => {
+    const launchScreenText = document.querySelector('.launch-screen-text')! as HTMLSpanElement;
+    launchScreenText.hidden = false;
+});
+
 const gameCanvas = document.getElementsByClassName('game-canvas-container')[0]! as HTMLDivElement;
 
 document.addEventListener('keydown', handleSpacePress);
@@ -88,5 +94,26 @@ function handleSpacePress(event: KeyboardEvent) {
         document.removeEventListener('keydown', handleSpacePress); // Remove the listener
         new Game();
     }
+}
+
+function fadeIn(element: HTMLElement, callback: () => void) {
+    let opacity = 0;
+    element.style.opacity = opacity.toString();
+    element.style.display = "grid";
+
+    const duration = 1000;
+    const interval = 10;
+    const increment = interval / duration;
+
+    const fade = setInterval(() => {
+        opacity += increment;
+        element.style.opacity = opacity.toString();
+
+        if (opacity >= 1) {
+            element.style.opacity = "1";
+            callback();
+            clearInterval(fade);
+        }
+    }, interval);
 }
 

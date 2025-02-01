@@ -5,6 +5,8 @@
 > The player can only change the direction of the character with WASD. Play alone or against your friends in local
 > multiplayer mode!
 
+<img src="public/assets/images/titlescreen.png" alt="Menu UI Screenshot" width="600">
+
 ---
 
 ## 🌐 **Play the Game**
