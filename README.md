@@ -1,6 +1,7 @@
 # 🎮 **Overdosed on Overtime**
 
-> **Short Pitch**: Collect as many randomly spawning items as you can in a minute without colliding with enemies or objects.
+> **Short Pitch**: Collect as many randomly spawning items as you can in a minute without colliding with enemies or
+> objects.
 > The player can only change the direction of the character with WASD. Play alone or against your friends in local
 > multiplayer mode!
 
@@ -69,6 +70,10 @@ Download Tiled: [Tiled Map Editor](https://www.mapeditor.org/)
 
 - **Tiled:** The game levels are created using Tiled, a free and open-source map editor. The levels are exported as JSON
   files and loaded into the game using a custom importer.
+  There needs to be a layer called `collide` in the Tiled map editor to create collision objects. The game uses this to
+  detect collisions.
+  The layer called `player_overlay` is used to draw things after the player is drawn, such as table corners or other
+  objects that should be drawn on top of the player.
 - **Creating new Levels:** Create a new `LevelConfig` object in the `src/game/scenes/levels` directory that implements
   the
   `Level` class. This object imports the JSON file and sets the level properties such as spawn positions and enemies.
