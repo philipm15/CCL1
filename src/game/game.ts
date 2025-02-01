@@ -83,6 +83,10 @@ export class Game {
         this.handleInput();
         this.level.draw();
 
+        // Dirty fix: there is a bug in the game where the options window is showing and others (e.g. Game Result) too,
+        // so we need to check if the options window is showing and if so, close other windows
+        this.checkIfOptionsShowing();
+
         this.animationFrameId = requestAnimationFrame(this.gameLoop.bind(this));
     }
 
@@ -116,6 +120,12 @@ export class Game {
         this.canvasManager.gameOptions.style.display = 'grid';
         this.canvasManager.gameResultContainer.style.display = 'none';
         this.canvasManager.launchScreen.style.display = 'none';
+    }
+
+    private checkIfOptionsShowing() {
+        if (this.canvasManager.gameOptions.style.display === 'grid' && this.canvasManager.gameResultContainer.style.display !== 'none') {
+            this.handleOptionsWindow();
+        }
     }
 
     private getSelectedLevel(): LevelConfig {
