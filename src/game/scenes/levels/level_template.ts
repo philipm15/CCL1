@@ -24,7 +24,7 @@ export class LevelTemplate implements Level {
     scorePlayer2 = 0;
     maxElementsToSpawn = 1;
     playerMode: Level["playerMode"] = "mp";
-    timeToFinish = 60000;
+    timeToFinish = 5000;
     remainingTime = this.timeToFinish;
     pointsToFinish = 20;
     onCompleteCallback: (result: LevelResult) => void = () => {};

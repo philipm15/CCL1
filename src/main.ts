@@ -101,7 +101,7 @@ function fadeIn(element: HTMLElement, callback: () => void) {
     element.style.opacity = opacity.toString();
     element.style.display = "grid";
 
-    const duration = 1000;
+    const duration = 1200;
     const interval = 10;
     const increment = interval / duration;
 

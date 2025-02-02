@@ -1,4 +1,4 @@
-import {EventTargetMixin} from "../lib/event-target.decorator.ts";
+import {EventTargetMixin} from "../lib/event-target.ts";
 import {CanvasItemNode, CanvasItemNodeDirection} from "./canvas-item.node.ts";
 import {AnimatedSpriteNode} from "./animated-sprite.node.ts";
 import {PLAYER_SPEED, TILE_SIZE} from "../lib/constants.ts";
