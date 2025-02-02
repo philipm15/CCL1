@@ -43,8 +43,8 @@ Below are the sprites used to create characters and objects in the game:
 ### Player Character:
 
 <div style="text-align: center;">
-  <img src="public/assets/spritesheets/player_blue.png" alt="Player Blue Spritesheet" width="500">
-<img src="public/assets/spritesheets/player_red.png" alt="Player Red Spritesheet" width="500">
+  <img src="public/assets/spritesheets/player_blue.png" alt="Player Blue Spritesheet" width="256">
+<img src="public/assets/spritesheets/player_red.png" alt="Player Red Spritesheet" width="256">
   <p>*Figure 3: Player character animations.*</p>
 </div>
 
@@ -53,8 +53,19 @@ Below are the sprites used to create characters and objects in the game:
 ### Enemies and NPCs:
 
 <div style="text-align: center;">
-  <img src="public/assets/spritesheets/enemy_1.png" alt="Enemy Spritesheet" width="500">
+  <img src="public/assets/spritesheets/enemy_1.png" alt="Enemy Spritesheet" width="256">
   <p>*Figure 4: Enemy animations.*</p>
+</div>
+
+---
+
+### Collectibless:
+
+<div style="text-align: center;">
+  <img src="public/assets/sprites/money_bag.png" alt="Enemy Spritesheet" width="32">
+  <img src="public/assets/sprites/pill_orange.png" alt="Enemy Spritesheet" width="32">
+  <img src="public/assets/sprites/pill_violet.png" alt="Enemy Spritesheet" width="32">
+  <p>*Figure 5: Collectibles.*</p>
 </div>
 
 ---
@@ -81,6 +92,8 @@ Download Tiled: [Tiled Map Editor](https://www.mapeditor.org/)
   `Level` class. This object imports the JSON file and sets the level properties such as spawn positions and enemies.
 - **Adding new Levels:** Add a new options under `pixel-radio-group` in the `main.ts` file to select the new level. Add
   a new case in the `switch` statement in the `Game` class to load the new level.
+
+---
 
 ## ✍️ **Reflection**
 
